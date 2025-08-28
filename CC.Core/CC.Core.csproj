@@ -10,4 +10,10 @@
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\CC.Data\CC.Data.csproj" />
+      <ProjectReference Include="..\JsonParser\JsonParser.csproj" />
+      <ProjectReference Include="..\SocketManager\SocketManager.csproj" />
+    </ItemGroup>
+
 </Project>

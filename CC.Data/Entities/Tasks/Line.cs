@@ -1,6 +1,8 @@
-﻿namespace CC.Data.Entities.Tasks;
+﻿using CC.Data.Entities.Base;
 
-public class Line
+namespace CC.Data.Entities.Tasks;
+
+public class Line : Entity
 {
-    
+    public string? Description { get; set; }
 }

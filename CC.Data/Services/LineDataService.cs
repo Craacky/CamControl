@@ -1,6 +1,11 @@
-﻿namespace CC.Data.Services;
+﻿using CC.Data.Entities.Tasks;
+using CC.Data.Services.Base;
 
-public class LineDataService
+namespace CC.Data.Services;
+
+public class LineDataService : DataService<Line>
 {
-    
+    public LineDataService(string connectionString) : base(connectionString)
+    {
+    }
 }

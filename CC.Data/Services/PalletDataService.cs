@@ -1,6 +1,11 @@
-﻿namespace CC.Data.Services;
+﻿using CC.Data.Entities.Codes;
+using CC.Data.Services.Base;
 
-public class PalletDataService
+namespace CC.Data.Services;
+
+public class PalletDataService : DataService<Pallet>
 {
-    
+    public PalletDataService(string connectionString) : base(connectionString)
+    {
+    }
 }

@@ -1,6 +1,11 @@
-﻿namespace CC.Data.Services;
+﻿using CC.Data.Entities.Tasks;
+using CC.Data.Services.Base;
 
-public class NomenclatureDataService
+namespace CC.Data.Services;
+
+public class NomenclatureDataService : DataService<Nomenclature>
 {
-    
+    public NomenclatureDataService(string connectionString) : base(connectionString)
+    {
+    }
 }

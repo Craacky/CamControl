@@ -1,6 +1,11 @@
-﻿namespace CC.Data.Services;
+﻿using CC.Data.Entities.Tasks;
+using CC.Data.Services.Base;
 
-public class AttributeDataService
+namespace CC.Data.Services;
+
+public class AttributeDataService : DataService<Attribute>
 {
-    
+    public AttributeDataService(string connectionString) : base(connectionString)
+    {
+    }
 }

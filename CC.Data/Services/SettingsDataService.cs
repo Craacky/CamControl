@@ -1,6 +1,11 @@
-﻿namespace CC.Data.Services;
+﻿using CC.Data.Entities.Settings;
+using CC.Data.Services.Base;
 
-public class SettingsDataService
+namespace CC.Data.Services;
+
+public class SettingsDataService : DataService<Settings>
 {
-    
+    public SettingsDataService(string connectionString) : base(connectionString)
+    {
+    }
 }

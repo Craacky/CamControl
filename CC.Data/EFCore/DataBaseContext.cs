@@ -1,5 +1,4 @@
 ﻿using System;
-using CC.Data.Entities.Code;
 using CC.Data.Entities.Codes;
 using CC.Data.Entities.Settings;
 using CC.Data.Entities.Tasks;
@@ -18,7 +17,7 @@ public class DataBaseContext : DbContext
     public bool IsConnected =>
         _connectionState == DbConnectionState.Connected || _connectionState == DbConnectionState.Created;
 
-    public event Action<DataBaseContext, DateTime, DbConnectionState>? ConnectionChanged;
+    public static event Action<DataBaseContext, DateTime, DbConnectionState>? ConnectionChanged;
 
     public DbSet<Nomenclature> Nomenclatures { get; set; }
     public DbSet<Attribute> Attributes { get; set; }

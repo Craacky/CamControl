@@ -25,7 +25,7 @@ namespace SocketManager
         public event Action<Client, DateTime, string>? MessageReceived;
         public event Action<Client, DateTime, string>? MessageSent;
 
-        public Client(string ip, int port)
+        public Client(string? ip, int port)
         {
             Ip = ip;
             Port = port;
@@ -168,7 +168,7 @@ namespace SocketManager
             }
         }
 
-        private async Task RecoveryConnectAsync()
+        public async Task RecoveryConnectAsync()
         {
             if (_isServerClient) return;
 
