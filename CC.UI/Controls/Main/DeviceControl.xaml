@@ -4,9 +4,78 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:CC.UI.Controls.Main"
+             xmlns:main="clr-namespace:CC.UI.ViewModels.Main"
+             xmlns:models="clr-namespace:CC.Core.Models;assembly=CC.Core"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-        
-    </Grid>
+             d:DataContext="{d:DesignInstance Type=main:MainViewModel, IsDesignTimeCreatable=False}">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../../Styles/TextBlock.xaml" />
+                <ResourceDictionary Source="../../Styles/Border.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style TargetType="Border" BasedOn="{StaticResource ControlBorderStyle}">
+                <Setter Property="Margin" Value="4" />
+                <Setter Property="BorderBrush" Value="LightGray" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="CornerRadius" Value="5" />
+                <Setter Property="TextBlock.Foreground" Value="LightGray" />
+                <Style.Triggers>
+                    <Trigger Property="DataContext" Value="{x:Null}">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                    </Trigger>
+
+                    <DataTrigger Binding="{Binding IsConnected}" Value="False">
+                        <Setter Property="Background" Value="Red" />
+                        <Setter Property="TextElement.Foreground" Value="White" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Border d:DataContext="{d:DesignInstance Type=models:Device, IsDesignTimeCreatable=False}">
+        <Grid>
+            <Grid.Resources>
+                <Style x:Key="IconTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource IconTextBlockStyle}">
+                    <Setter Property="HorizontalAlignment" Value="Center" />
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                    <Setter Property="FontSize" Value="25" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsConnected}" Value="True">
+                            <Setter Property="Foreground" Value="Green" />
+                            <Setter Property="Text" Value="&#xE930;" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsConnected}" Value="False">
+                            <Setter Property="Foreground" Value="White" />
+                            <Setter Property="Text" Value="&#xF384;" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+
+                <Style TargetType="TextBlock" BasedOn="{StaticResource BodyTextBlockStyle}">
+                    <Setter Property="MaxHeight" Value="70" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsConnected}" Value="False">
+                            <Setter Property="Foreground" Value="White" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Resources>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+
+
+            <TextBlock Grid.Column="0"
+                       Text="{Binding Name, UpdateSourceTrigger=PropertyChanged, FallbackValue=----------------------------}"
+                       VerticalAlignment="Center" />
+            <TextBlock Grid.Column="1"
+                       Style="{StaticResource IconTextBlockStyle}" />
+        </Grid>
+    </Border>
 </UserControl>

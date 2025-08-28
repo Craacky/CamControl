@@ -1,6 +1,14 @@
-﻿namespace CC.UI.ViewModels.Main;
+﻿using CC.Core.Services.Impl;
+using CC.UI.ViewModels.Base;
 
-public class ErrorsViewModel
+namespace CC.UI.ViewModels.Main;
+
+public class ErrorsViewModel : ViewModel
 {
-    
+    public ErrorsService ErrorsService { get; set; }
+
+    public ErrorsViewModel(ErrorsService errorsService)
+    {
+        ErrorsService = errorsService;
+    }
 }

@@ -4,9 +4,30 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:CC.UI.Controls.Main"
+             xmlns:main="clr-namespace:CC.UI.ViewModels.Main"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-        
-    </Grid>
+             d:DataContext="{d:DesignInstance Type=main:MainViewModel, IsDesignTimeCreatable=False}">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../../Styles/TextBlock.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Border Padding="5">
+        <UniformGrid Columns="{Binding Devices.Count}"
+                     Rows="1"
+                     d:DataContext="{Binding DeviceService}">
+            <local:DeviceControl DataContext="{Binding Devices[0], UpdateSourceTrigger=PropertyChanged}"/>
+            <local:DeviceControl DataContext="{Binding Devices[1], UpdateSourceTrigger=PropertyChanged}"/>
+            <local:DeviceControl DataContext="{Binding Devices[2], UpdateSourceTrigger=PropertyChanged}"/>
+            <local:DeviceControl DataContext="{Binding Devices[3], UpdateSourceTrigger=PropertyChanged}"/>
+            <local:DeviceControl DataContext="{Binding Devices[4], UpdateSourceTrigger=PropertyChanged}"/>
+            <local:DeviceControl DataContext="{Binding Devices[5], UpdateSourceTrigger=PropertyChanged}"/>
+            <local:DeviceControl DataContext="{Binding Devices[6], UpdateSourceTrigger=PropertyChanged}"/>
+            <local:DeviceControl DataContext="{Binding Devices[7], UpdateSourceTrigger=PropertyChanged}"/>
+        </UniformGrid>
+    </Border>
 </UserControl>

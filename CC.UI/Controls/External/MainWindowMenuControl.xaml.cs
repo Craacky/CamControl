@@ -2,9 +2,9 @@
 
 namespace CC.UI.Controls.External;
 
-public partial class TaskTableControl : UserControl
+public partial class MainWindowMenuControl : UserControl
 {
-    public TaskTableControl()
+    public MainWindowMenuControl()
     {
         InitializeComponent();
     }

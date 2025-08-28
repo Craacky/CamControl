@@ -4,9 +4,65 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:CC.UI.Controls.Settings"
+             xmlns:settings="clr-namespace:CC.UI.ViewModels.Settings"
+             xmlns:settings1="clr-namespace:CC.Data.Entities.Settings;assembly=CC.Data"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-        
-    </Grid>
+             d:DataContext="{d:DesignInstance Type=settings:CamerasViewModel, IsDesignTimeCreatable=False}">
+    
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../../Styles/Common.xaml"/>
+                <ResourceDictionary Source="../../Styles/Border.xaml"/>
+                <ResourceDictionary Source="../../Styles/TextBlock.xaml"/>
+                <ResourceDictionary Source="../../Styles/TextBox.xaml"/>
+                <ResourceDictionary Source="../../Styles/Button.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style TargetType="TextBlock" BasedOn="{StaticResource HeaderFieldTextBlockStyle}"></Style>
+            <Style TargetType="TextBox" BasedOn="{StaticResource TextBoxStyle}"></Style>
+            <Style TargetType="Button" BasedOn="{StaticResource ChoosePathButtonStyle}">
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Border Style="{StaticResource ControlBorderStyle}">
+        <StackPanel d:DataContext="{d:DesignInstance Type=settings1:DeviceSettings, IsDesignTimeCreatable=False}">
+            <Border Style="{StaticResource TableHeaderBorderStyle}">
+                <StackPanel>
+                    <TextBlock Text="{Binding Name,UpdateSourceTrigger=PropertyChanged }"
+                           Style="{StaticResource HeaderBodyTextBlockStyle}"/>
+                </StackPanel>
+            </Border>
+
+            <StackPanel>
+                <CheckBox Content="Использовать" IsChecked="{Binding IsUsed, UpdateSourceTrigger=PropertyChanged}"
+                          Style="{StaticResource CheckBoxStyle}"/>
+            </StackPanel>
+
+            <StackPanel IsEnabled="{Binding IsUsed, UpdateSourceTrigger=PropertyChanged}">
+                <TextBlock Text="Ip адрес"/>
+                <TextBox Text="{Binding Ip,UpdateSourceTrigger=PropertyChanged }"/>
+            </StackPanel>
+
+            <StackPanel IsEnabled="{Binding IsUsed, UpdateSourceTrigger=PropertyChanged}">
+                <TextBlock Text="Порт"/>
+                <TextBox Text="{Binding Port,UpdateSourceTrigger=PropertyChanged }"/>
+            </StackPanel>
+
+            <StackPanel IsEnabled="{Binding IsUsed, UpdateSourceTrigger=PropertyChanged}">
+                <TextBlock Text="Пусть к фотографиям"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox x:Name="pathTextBlock"
+                             Grid.Column="0" Text="{Binding Path,UpdateSourceTrigger=PropertyChanged }"/>
+                    <Button Grid.Column="1" Click="Button_Click"/>
+                </Grid>
+            </StackPanel>
+        </StackPanel>
+    </Border>
 </UserControl>
