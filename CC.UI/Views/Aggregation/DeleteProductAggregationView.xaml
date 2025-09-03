@@ -3,56 +3,58 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:CC.UI.Views.Aggregation"
              xmlns:aggregation="clr-namespace:CC.UI.ViewModels.Aggregation"
              mc:Ignorable="d"
-             d:DataContext="{d:DesignInstance Type=aggregation:DeleteProductAggregationViewModel, IsDesignTimeCreatable=False}">
+  d:DataContext="{d:DesignInstance Type=aggregation:DeleteProductAggregationViewModel, IsDesignTimeCreatable=False}">
+
 
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../../Styles/TextBox.xaml" />
-                <ResourceDictionary Source="../../Styles/Label.xaml" />
-                <ResourceDictionary Source="../../Styles/TextBlock.xaml" />
-                <ResourceDictionary Source="../../Styles/Border.xaml" />
+                <ResourceDictionary Source="../../Styles/TextBox.xaml"/>
+                <ResourceDictionary Source="../../Styles/Label.xaml"/>
+                <ResourceDictionary Source="../../Styles/TextBlock.xaml"/>
+                <ResourceDictionary Source="../../Styles/Border.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <Style TargetType="TextBox" BasedOn="{StaticResource TextBoxStyle}">
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding IsErrorStatusScannedCode}" Value="True">
-                        <Setter Property="BorderBrush" Value="Red" />
-                        <Setter Property="Tag" Value="&#xE783;" />
+                        <Setter Property="BorderBrush" Value="Red"/>
+                        <Setter Property="Tag" Value="&#xE783;"/>
                     </DataTrigger>
 
                     <DataTrigger Binding="{Binding IsErrorStatusScannedCode}" Value="False">
-                        <Setter Property="BorderBrush" Value="Green" />
-                        <Setter Property="Tag" Value="&#xE73E;" />
+                        <Setter Property="BorderBrush" Value="Green"/>
+                        <Setter Property="Tag" Value="&#xE73E;"/>
                     </DataTrigger>
 
                     <DataTrigger Binding="{Binding StatusScannedCode}" Value="">
-                        <Setter Property="BorderBrush" Value="DarkGray" />
-                        <Setter Property="Tag" Value="" />
+                        <Setter Property="BorderBrush" Value="DarkGray"/>
+                        <Setter Property="Tag" Value=""/>
                     </DataTrigger>
 
                     <MultiTrigger>
                         <MultiTrigger.Conditions>
-                            <Condition Property="IsKeyboardFocused" Value="True" />
-                            <Condition Property="Tag" Value="" />
+                            <Condition Property="IsKeyboardFocused" Value="True"/>
+                            <Condition Property="Tag" Value=""/>
                         </MultiTrigger.Conditions>
 
-                        <Setter Property="BorderBrush" Value="#015DFE" />
+                        <Setter Property="BorderBrush" Value="#03045e"/>
                     </MultiTrigger>
                 </Style.Triggers>
             </Style>
 
             <Style TargetType="Label" BasedOn="{StaticResource LabelStyle}">
-                <Setter Property="Foreground" Value="Green" />
-                <Setter Property="Background" Value="#E0F9E3" />
-                <Setter Property="Tag" Value="&#xE73E;" />
+                <Setter Property="Foreground" Value="Green"/>
+                <Setter Property="Background" Value="#E0F9E3"/>
+                <Setter Property="Tag" Value="&#xE73E;"/>
                 <Style.Triggers>
-                    <DataTrigger Binding="{Binding IsErrorStatusScannedCode}" Value="true">
-                        <Setter Property="Foreground" Value="Red" />
-                        <Setter Property="Background" Value="#FAE8E6" />
-                        <Setter Property="Tag" Value="&#xE783;" />
+                    <DataTrigger  Binding="{Binding IsErrorStatusScannedCode}" Value="true">
+                        <Setter Property="Foreground" Value="Red"/>
+                        <Setter Property="Background" Value="#FAE8E6"/>
+                        <Setter Property="Tag" Value="&#xE783;"/>
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
@@ -65,25 +67,25 @@
         <StackPanel>
             <Border Style="{StaticResource TableHeaderBorderStyle}">
                 <TextBlock Text="Удаление продукта"
-                           Style="{StaticResource HeaderTextBlockStyle}" />
+                           Style="{StaticResource HeaderTextBlockStyle}"/>
             </Border>
 
             <StackPanel>
 
-                <StackPanel DataContext="{Binding BoxCode}"
-                            IsEnabled="{Binding IsEnabledFieldScannedCode}">
-                    <TextBlock Text="Сканируйте/Введите код короба" />
+                <StackPanel DataContext="{Binding BoxCode}" 
+                        IsEnabled="{Binding IsEnabledFieldScannedCode}">
+                    <TextBlock Text="Сканируйте/Введите код короба"/>
                     <TextBox Text="{Binding Code, UpdateSourceTrigger= PropertyChanged, Mode=TwoWay}"
-                             KeyUp="TextBox_KeyUp" />
-                    <Label Content="{Binding StatusScannedCode, UpdateSourceTrigger=PropertyChanged}" />
+                         KeyUp="TextBox_KeyUp"/>
+                    <Label Content="{Binding StatusScannedCode, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
 
                 <StackPanel DataContext="{Binding ProductCode}"
                             IsEnabled="{Binding IsEnabledFieldScannedCode}">
-                    <TextBlock Text="Сканируйте/Введите код продукта" />
+                    <TextBlock Text="Сканируйте/Введите код продукта"/>
                     <TextBox Text="{Binding Code, UpdateSourceTrigger= PropertyChanged, Mode=TwoWay}"
-                             KeyUp="TextBox_KeyUp" />
-                    <Label Content="{Binding StatusScannedCode, UpdateSourceTrigger=PropertyChanged}" />
+                        KeyUp="TextBox_KeyUp"/>
+                    <Label Content="{Binding StatusScannedCode, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
             </StackPanel>
         </StackPanel>

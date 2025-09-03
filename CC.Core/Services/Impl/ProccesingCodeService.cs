@@ -40,7 +40,7 @@ public class ProcessingCodeService
     public ReportTaskService ReportTaskService { get; set; }
     public LocalDb LocalDbService { get; set; }
 
-    public ProcessingCodeService(ReportTaskService reportTaskService,
+    public ProcessingCodeService(ReportTaskService? reportTaskService,
         LocalDb localDbService)
     {
         ReportTaskService = reportTaskService;
@@ -61,8 +61,8 @@ public class ProcessingCodeService
     public bool IsPalletCodeTheCurrentTask(string code)
     {
         _patternOnPalletCodeTheCurrentReportTask = $@"^01{ReportTaskService.CurrentReportTask.Nomenclature!.Gtin}" +
-                                                   $@"11{ReportTaskService.CurrentReportTask.ManufactureDate.ToString("yyMMdd")}" +
-                                                   $@"17{ReportTaskService.CurrentReportTask.ExpiryDate.ToString("yyMMdd")}" +
+                                                   $@"11{ReportTaskService.CurrentReportTask.ManufactureDate:yyMMdd}" +
+                                                   $@"17{ReportTaskService.CurrentReportTask.ExpiryDate:yyMMdd}" +
                                                    $@"10{ReportTaskService.CurrentReportTask.LotNumber}" +
                                                    @"(\u001d|)?21\d{1,5}" +
                                                    @"(\u001d|)?37\d{1,10}$";

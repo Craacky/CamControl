@@ -179,6 +179,8 @@ public class Settings : Entity, ICloneable
     {
         Settings? settings = obj as Settings;
         var isEqual =
+            settings != null &&
+            settings.Line != null &&
             settings.Line.FullName == Line!.FullName &&
             settings.Line.ShortName == Line.ShortName &&
             settings.Line.LineId == Line.LineId &&
@@ -219,5 +221,15 @@ public class Settings : Entity, ICloneable
             settings.ServerDb.IsUsed == ServerDb.IsUsed;
 
         return isEqual;
+    }
+
+    protected bool Equals(Settings other)
+    {
+        return Equals(_line, other._line) && Equals(_productCameraMaster, other._productCameraMaster) && Equals(_productCameraSlave, other._productCameraSlave) && Equals(_boxCamera, other._boxCamera) && Equals(_boxPrinter, other._boxPrinter) && Equals(_palletPrinter, other._palletPrinter) && Equals(_serverDb, other._serverDb);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(_line, _productCameraMaster, _productCameraSlave, _boxCamera, _boxPrinter, _palletPrinter, _serverDb);
     }
 }

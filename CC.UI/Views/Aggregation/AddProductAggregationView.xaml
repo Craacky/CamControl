@@ -3,9 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:CC.UI.Views.Aggregation"
              xmlns:aggregation="clr-namespace:CC.UI.ViewModels.Aggregation"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=aggregation:AddProductAggregationViewModel, IsDesignTimeCreatable=False}">
+
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -39,7 +41,7 @@
                             <Condition Property="Tag" Value="" />
                         </MultiTrigger.Conditions>
 
-                        <Setter Property="BorderBrush" Value="#015DFE" />
+                        <Setter Property="BorderBrush" Value="#03045e" />
                     </MultiTrigger>
                 </Style.Triggers>
             </Style>

@@ -59,7 +59,7 @@ public class ReportTaskService : ObservableObject
             {
                 Statistic = new Statistic();
                 LoadCodesReportTask(currentReportTask);
-                Statistic.CountBoxInCurrentPallet =
+                Statistic.CountBoxInCurrentPallet = 
                     Statistic.PalletCodes.Count > 0 ? Statistic.PalletCodes[^1].Boxes.Count : 0;
                 Statistic.CountProducts = Statistic.ProductCodes.Count;
                 Statistic.CountBoxes = Statistic.BoxCodes.Count;

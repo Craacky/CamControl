@@ -8,9 +8,9 @@ using CC.UI.ViewModels.Base;
 
 namespace CC.UI.ViewModels.Aggregation;
 
-public class DeletePalletAggregationViewModel : ViewModel
+public class DeletePalletAggregationViewModel:ViewModel
 {
-      public ScannedCode PalletCode { get; set; }
+         public ScannedCode PalletCode { get; set; }
 
 
         public ProcessingCodeService ProcessingCodeService { get; set; }
@@ -21,7 +21,7 @@ public class DeletePalletAggregationViewModel : ViewModel
 
         public DeletePalletAggregationViewModel(ProcessingCodeService processingCodeService,
                                                       ReportTaskService reportTaskService,
-                                                      LocalDb localDBService,
+                                                      LocalDb localDbService,
                                                       ErrorsService errorsService)
         {
             PalletCode = new ScannedCode();
@@ -29,7 +29,7 @@ public class DeletePalletAggregationViewModel : ViewModel
 
             ProcessingCodeService = processingCodeService;
             ReportTaskService = reportTaskService;
-            LocalDBService = localDBService;
+            LocalDBService = localDbService;
             ErrorsService = errorsService;
         }
 
@@ -139,5 +139,5 @@ public class DeletePalletAggregationViewModel : ViewModel
             }
 
             PalletCode.Code = string.Empty;
-        }
+        }   
 }

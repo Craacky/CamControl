@@ -6,7 +6,7 @@ namespace CC.Core.Services;
 public interface ISettingsService
 {
     LocalDb LocalDbService { get; set; }
-    Settings Settings { get; set; }
+    Settings? Settings { get; set; }
 
     void LoadSettings();
     void SaveSettings(Settings settings);

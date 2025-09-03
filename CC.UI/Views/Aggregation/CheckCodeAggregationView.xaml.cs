@@ -3,7 +3,7 @@ using System.Windows.Input;
 
 namespace CC.UI.Views.Aggregation;
 
-public partial class CheckCodeAggregationView
+public partial class CheckCodeAggregationView : UserControl
 {
     public CheckCodeAggregationView()
     {
@@ -13,9 +13,6 @@ public partial class CheckCodeAggregationView
     private void TextBox_KeyUp(object sender, KeyEventArgs e)
     {
         var textBox = sender as TextBox;
-        if (e.Key == Key.Enter)
-        {
-            textBox!.Text += "\0";
-        }
+        if (e.Key == Key.Enter) textBox!.Text = "\0";
     }
 }

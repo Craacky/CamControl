@@ -6,9 +6,9 @@ using CC.UI.ViewModels.Base;
 
 namespace CC.UI.ViewModels.Aggregation;
 
-public class CheckCodeAggregationViewModel: ViewModel
+public class CheckCodeAggregationViewModel : ViewModel
 {
-    public ScannedCode ScannedCode { get; set; }
+            public ScannedCode ScannedCode { get; set; }
 
 
         public ProcessingCodeService ProcessingCodeService { get; set; }

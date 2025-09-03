@@ -6,7 +6,6 @@
             <Style x:Key="ButtonIconStyle" TargetType="TextBlock">
                 <Setter Property="FontFamily" Value="Segoe MDL2 Assets" />
                 <Setter Property="Padding" Value="0 5 15 0" />
-
                 <Style.Triggers>
                     <Trigger Property="Text" Value="">
                         <Setter Property="Visibility" Value="Collapsed" />
@@ -45,7 +44,6 @@
             </Grid>
         </Border>
     </ControlTemplate>
-
     <ControlTemplate x:Key="RadioButtonControlTemplate" TargetType="RadioButton">
         <ControlTemplate.Resources>
             <Style x:Key="RadioButtonIconStyle" TargetType="TextBlock">
@@ -94,13 +92,13 @@
         <Setter Property="Template" Value="{StaticResource ButtonControlTemplate}" />
 
         <Setter Property="FontSize" Value="13" />
-        <Setter Property="FontFamily" Value="Segoe UI" />
-        <Setter Property="FontWeight" Value="Regular" />
-        <Setter Property="Foreground" Value="White" />
-        <Setter Property="Background" Value="DarkBlue" />
-        <Setter Property="BorderBrush" Value="DarkBlue" />
-        <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="Border.CornerRadius" Value="5" />
+        <Setter Property="FontFamily" Value="Satoshi" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="#ffffff" />
+        <Setter Property="Background" Value="#03045e" />
+        <Setter Property="BorderBrush" Value="#03045e" />
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="Border.CornerRadius" Value="15" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Stretch" />
@@ -119,8 +117,9 @@
     </Style>
 
     <Style x:Key="SecondaryButtonStyle" TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
-        <Setter Property="Foreground" Value="DarkBlue" />
+        <Setter Property="Foreground" Value="#03045e" />
         <Setter Property="Background" Value="White" />
+        <Setter Property="BorderBrush" Value="#03045e" />
     </Style>
 
     <Style x:Key="IconButtonStyle" TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}">
@@ -128,8 +127,8 @@
         <Setter Property="FontFamily" Value="Segoe MDL2 Assets" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderBrush" Value="{x:Null}" />
-        <Setter Property="Border.CornerRadius" Value="0" />
-        <Setter Property="Foreground" Value="Gray" />
+        <Setter Property="Border.CornerRadius" Value="15" />
+        <Setter Property="Foreground" Value="Black" />
         <Setter Property="Padding" Value="15" />
         <Setter Property="Margin" Value="0" />
 
@@ -145,13 +144,13 @@
         <Setter Property="Template" Value="{StaticResource RadioButtonControlTemplate}" />
 
         <Setter Property="FontSize" Value="14" />
-        <Setter Property="FontFamily" Value="Segoe UI" />
-        <Setter Property="FontWeight" Value="Regular" />
+        <Setter Property="FontFamily" Value="Satoshi" />
+        <Setter Property="FontWeight" Value="Bold" />
         <Setter Property="Foreground" Value="White" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderBrush" Value="Transparent" />
         <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="Border.CornerRadius" Value="0" />
+        <Setter Property="Border.CornerRadius" Value="0 0  0 0"></Setter>
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="VerticalAlignment" Value="Stretch" />
@@ -173,14 +172,16 @@
 
     <Style x:Key="MainWindowMenuCloseButtonStyle" TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
         <Setter Property="VerticalAlignment" Value="Bottom" />
+        <Setter Property="Margin" Value="0 5" />
     </Style>
 
     <Style x:Key="MainWindowMenuRadioButtonStyle" TargetType="RadioButton" BasedOn="{StaticResource RadioButtonStyle}">
-        <Setter Property="Margin" Value="0 0 -1 0" />
+        <Setter Property="Margin" Value="1" />
+        <Setter Property="Border.CornerRadius" Value="15"/>
         <Style.Triggers>
             <Trigger Property="IsChecked" Value="True">
                 <Setter Property="Background" Value="#F9F9FB" />
-                <Setter Property="Foreground" Value="DarkBlue" />
+                <Setter Property="Foreground" Value="#03045e" />
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -201,11 +202,12 @@
         <Setter Property="BorderBrush" Value="LightGray" />
         <Setter Property="BorderThickness" Value="0 0 0 5" />
         <Setter Property="Margin" Value="0 0 0 -2.5" />
+        <Setter Property="Border.CornerRadius" Value="0"></Setter>
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Style.Triggers>
             <Trigger Property="IsChecked" Value="True">
-                <Setter Property="BorderBrush" Value="DarkBlue" />
-                <Setter Property="Foreground" Value="DarkBlue" />
+                <Setter Property="BorderBrush" Value="#03045e" />
+                <Setter Property="Foreground" Value="#03045e" />
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -213,8 +215,10 @@
     <Style x:Key="ChoosePathButtonStyle" TargetType="Button" BasedOn="{StaticResource IconButtonStyle}">
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Margin" Value="5" />
+        <Setter Property="Border.CornerRadius" Value="15"/>
         <Setter Property="Foreground" Value="White" />
-        <Setter Property="Background" Value="DarkBlue" />
+        <Setter Property="Background" Value="#03045e" />
         <Setter Property="Content" Value="&#xE712;" />
     </Style>
+
 </ResourceDictionary>

@@ -1,11 +1,11 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    
+
     <Style x:Key="ControlBorderStyle" TargetType="Border">
         <Setter Property="Background" Value="White" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="2" />
         <Setter Property="BorderBrush" Value="LightGray" />
-        <Setter Property="CornerRadius" Value="5" />
+        <Setter Property="CornerRadius" Value="15" />
         <Setter Property="Margin" Value="10" />
         <Setter Property="Padding" Value="10" />
     </Style>
@@ -15,16 +15,18 @@
     </Style>
 
     <Style x:Key="WindowBorderStyle" TargetType="Border">
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderThickness" Value="2" />
         <Setter Property="BorderBrush" Value="LightGray" />
-        <Setter Property="CornerRadius" Value="5" />
+        <Setter Property="CornerRadius" Value="15" />
         <Setter Property="Background" Value="#F9F9FB" />
     </Style>
 
     <Style x:Key="TableHeaderBorderStyle" TargetType="Border">
         <Setter Property="Padding" Value="0" />
+
+        <Setter Property="CornerRadius" Value="15" />
         <Setter Property="Height" Value="55" />
-        <Setter Property="BorderThickness" Value="0 0 0 1" />
+        <Setter Property="BorderThickness" Value="0 1 0 1" />
         <Setter Property="BorderBrush" Value="LightGray" />
     </Style>
 
@@ -40,22 +42,28 @@
     <!--MainWindowMenu-->
 
     <Style x:Key="MainWindowMenuControlBorderStyle" TargetType="Border">
-        <Setter Property="Background" Value="DarkBlue" />
+        <Setter Property="CornerRadius" Value="15" />
+        <Setter Property="Background" Value="#03045e" />
+        
     </Style>
 
     <Style x:Key="MainWindowMenuBorderStyle" TargetType="Border">
-        <Setter Property="Background" Value="DarkBlue" />
-        <Setter Property="BorderThickness" Value="0 1" />
+        <Setter Property="Background" Value="#03045e" />
+        <Setter Property="BorderThickness" Value="0 2" />
         <Setter Property="BorderBrush" Value="LightGray" />
+        <Setter Property="CornerRadius" Value="15" />
+        
     </Style>
 
     <!--CreateReportTaskWindow-->
 
     <Style x:Key="CreateReportTaskBorderStyle" TargetType="Border">
-        <Setter Property="BorderThickness" Value="0 1" />
+        <Setter Property="BorderThickness" Value="0 2" />
         <Setter Property="BorderBrush" Value="LightGray" />
         <Setter Property="Margin" Value="0 10" />
         <Setter Property="Padding" Value="0 10" />
+        <Setter Property="CornerRadius" Value="15" />
+        
     </Style>
 
 
@@ -65,7 +73,7 @@
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Margin" Value="5" />
-        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="CornerRadius" Value="15" />
         <Setter Property="TextElement.Foreground" Value="White" />
         <Setter Property="Opacity" Value="0.7" />
         <Style.Triggers>
@@ -99,7 +107,9 @@
 
     <Style x:Key="SettingsMenuBorderStyle" TargetType="Border">
         <Setter Property="BorderThickness" Value="0 0 0 5" />
+        <Setter Property="CornerRadius" Value="0"></Setter>
         <Setter Property="BorderBrush" Value="LightGray" />
         <Setter Property="Margin" Value="10" />
     </Style>
+
 </ResourceDictionary>

@@ -65,5 +65,50 @@ public class DataBaseContext : DbContext
         {
             _connectionState = DbConnectionState.NotFoundDb;
         }
+
+        ConnectionChanged?.Invoke(this, DateTime.Now, _connectionState);
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Nomenclature>()
+            .HasMany(n => n.Attributes)
+            .WithOne(a => a.Nomenclature)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<ReportTask>()
+            .HasMany(rt => rt.Pallets)
+            .WithOne(p => p.ReportTask)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Pallet>()
+            .HasMany(p => p.Boxes)
+            .WithOne(b => b.Pallet)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Box>()
+            .HasMany(b => b.Products)
+            .WithOne(p => p.Box)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Settings>()
+            .OwnsOne(s => s.Line);
+        modelBuilder.Entity<Settings>()
+            .OwnsOne(s => s.ProductCameraMaster);
+        modelBuilder.Entity<Settings>()
+            .OwnsOne(s => s.ProductCameraSlave);
+        modelBuilder.Entity<Settings>()
+            .OwnsOne(s => s.BoxCamera);
+        modelBuilder.Entity<Settings>()
+            .OwnsOne(s => s.BoxPrinter);
+        modelBuilder.Entity<Settings>()
+            .OwnsOne(s => s.PalletPrinter);
+        modelBuilder.Entity<Settings>()
+            .OwnsOne(s => s.ServerDb);
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseSqlServer(ConnectionString);
     }
 }

@@ -15,7 +15,7 @@
         <Style.Triggers>
             <Trigger Property="IsSelected" Value="True">
                 <Setter Property="Foreground" Value="White"/>
-                <Setter Property="Background" Value="DarkBlue"/>
+                <Setter Property="Background" Value="#03045e"/>
             </Trigger>
 
             <Trigger Property="IsMouseOver" Value="True">

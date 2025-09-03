@@ -4,9 +4,9 @@ using CC.Core.Models.Base;
 using CC.UI.ViewModels.Aggregation;
 using CC.UI.ViewModels.Base;
 
-namespace CC.Core.Navigators;
+namespace CC.UI.Navigators;
 
-public enum HandleAggregationViewType
+public enum AggregationViewType
 {
     CheckCodeView,
     AddProductView,
@@ -19,58 +19,58 @@ public enum HandleAggregationViewType
 
 public class AggregationNavigator : ObservableObject
 {
-    private ViewModel currentViewModel;
+    private ViewModel _currentViewModel;
 
     public ViewModel CurrentViewModel
     {
-        get => currentViewModel;
+        get => _currentViewModel;
         set
         {
-            currentViewModel = value;
+            _currentViewModel = value;
             OnPropertyChanged(nameof(CurrentViewModel));
         }
     }
 
 
-    public AddProductAggregationViewModel HandleAggregationAddProductViewModel { get; set; }
-    public DeleteProductAggregationViewModel HandleAggregationDeleteProductViewModel { get; set; }
-    public AddBoxAggregationViewModel HandleAggregationAddBoxViewModel { get; set; }
-    public DeleteBoxAggregationViewModel HandleAggregationDeleteBoxViewModel { get; set; }
-    public AddPalletAggregationViewModel HandleAggregationAddPalletViewModel { get; set; }
-    public DeletePalletAggregationViewModel HandleAggregationDeletePalletViewModel { get; set; }
-    public CheckCodeAggregationViewModel HandleAggregationCheckCodeViewModel { get; set; }
+    public AddProductAggregationViewModel AddProductAggregationViewModel { get; set; }
+    public DeleteProductAggregationViewModel DeleteProductAggregationViewModel { get; set; }
+    public AddBoxAggregationViewModel AddBoxAggregationViewModel { get; set; }
+    public DeleteBoxAggregationViewModel DeleteBoxAggregationViewModel { get; set; }
+    public AddPalletAggregationViewModel AddPalletAggregationViewModel { get; set; }
+    public DeletePalletAggregationViewModel DeletePalletAggregationViewModel { get; set; }
+    public CheckCodeAggregationViewModel CheckCodeAggregationViewModel { get; set; }
 
 
-    private ICommand updateCurrentViewModelCommand;
-    public ICommand UpdateCurrentViewModelCommand => updateCurrentViewModelCommand;
+    private ICommand _updateCurrentViewModelCommand;
+    public ICommand UpdateCurrentViewModelCommand => _updateCurrentViewModelCommand;
     private bool CanUpdateCurrentViewModelCommandExecute(object p) => true;
 
     private void OnUpdateCurrentViewModelCommandExecuted(object p)
     {
-        if (p is HandleAggregationViewType viewType)
+        if (p is AggregationViewType viewType)
         {
             switch (viewType)
             {
-                case HandleAggregationViewType.CheckCodeView:
-                    CurrentViewModel = HandleAggregationCheckCodeViewModel;
+                case AggregationViewType.CheckCodeView:
+                    CurrentViewModel = CheckCodeAggregationViewModel;
                     break;
-                case HandleAggregationViewType.AddProductView:
-                    CurrentViewModel = HandleAggregationAddProductViewModel;
+                case AggregationViewType.AddProductView:
+                    CurrentViewModel = AddProductAggregationViewModel;
                     break;
-                case HandleAggregationViewType.DeleteProductView:
-                    CurrentViewModel = HandleAggregationDeleteProductViewModel;
+                case AggregationViewType.DeleteProductView:
+                    CurrentViewModel = DeleteProductAggregationViewModel;
                     break;
-                case HandleAggregationViewType.AddBoxView:
-                    CurrentViewModel = HandleAggregationAddBoxViewModel;
+                case AggregationViewType.AddBoxView:
+                    CurrentViewModel = AddBoxAggregationViewModel;
                     break;
-                case HandleAggregationViewType.DeleteBoxView:
-                    CurrentViewModel = HandleAggregationDeleteBoxViewModel;
+                case AggregationViewType.DeleteBoxView:
+                    CurrentViewModel = DeleteBoxAggregationViewModel;
                     break;
-                case HandleAggregationViewType.AddPalletView:
-                    CurrentViewModel = HandleAggregationAddPalletViewModel;
+                case AggregationViewType.AddPalletView:
+                    CurrentViewModel = AddPalletAggregationViewModel;
                     break;
-                case HandleAggregationViewType.DeletePalletView:
-                    CurrentViewModel = HandleAggregationDeletePalletViewModel;
+                case AggregationViewType.DeletePalletView:
+                    CurrentViewModel = DeletePalletAggregationViewModel;
                     break;
                 default:
                     break;
@@ -79,23 +79,23 @@ public class AggregationNavigator : ObservableObject
     }
 
 
-    public AggregationNavigator(AddProductAggregationViewModel handleAggregationAddProductViewModel,
-        DeleteProductAggregationViewModel handleAggregationDeleteProductViewModel,
-        AddBoxAggregationViewModel handleAggregationAddBoxViewModel,
-        DeleteBoxAggregationViewModel handleAggregationDeleteBoxViewModel,
-        AddPalletAggregationViewModel handleAggregationAddPalletViewModel,
-        DeletePalletAggregationViewModel handleAggregationDeletePalletViewModel,
-        CheckCodeAggregationViewModel handleAggregationCheckCodeViewModel)
+    public AggregationNavigator(AddProductAggregationViewModel addProductAggregationViewModel,
+        DeleteProductAggregationViewModel deleteProductAggregationViewModel,
+        AddBoxAggregationViewModel addBoxAggregationViewModel,
+        DeleteBoxAggregationViewModel deleteBoxAggregationViewModel,
+        AddPalletAggregationViewModel addPalletAggregationViewModel,
+        DeletePalletAggregationViewModel deletePalletAggregationViewModel,
+        CheckCodeAggregationViewModel checkCodeAggregationViewModel)
     {
-        HandleAggregationAddProductViewModel = handleAggregationAddProductViewModel;
-        HandleAggregationDeleteProductViewModel = handleAggregationDeleteProductViewModel;
-        HandleAggregationAddBoxViewModel = handleAggregationAddBoxViewModel;
-        HandleAggregationDeleteBoxViewModel = handleAggregationDeleteBoxViewModel;
-        HandleAggregationAddPalletViewModel = handleAggregationAddPalletViewModel;
-        HandleAggregationDeletePalletViewModel = handleAggregationDeletePalletViewModel;
-        HandleAggregationCheckCodeViewModel = handleAggregationCheckCodeViewModel;
+        AddProductAggregationViewModel = addProductAggregationViewModel;
+        DeleteProductAggregationViewModel = deleteProductAggregationViewModel;
+        AddBoxAggregationViewModel = addBoxAggregationViewModel;
+        DeleteBoxAggregationViewModel = deleteBoxAggregationViewModel;
+        AddPalletAggregationViewModel = addPalletAggregationViewModel;
+        DeletePalletAggregationViewModel = deletePalletAggregationViewModel;
+        CheckCodeAggregationViewModel = checkCodeAggregationViewModel;
 
-        updateCurrentViewModelCommand = new RelayCommand(OnUpdateCurrentViewModelCommandExecuted,
+        _updateCurrentViewModelCommand = new RelayCommand(OnUpdateCurrentViewModelCommandExecuted,
             CanUpdateCurrentViewModelCommandExecute);
     }
 }

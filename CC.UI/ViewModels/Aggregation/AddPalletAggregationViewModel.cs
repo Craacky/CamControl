@@ -10,117 +10,84 @@ using CC.UI.ViewModels.Base;
 
 namespace CC.UI.ViewModels.Aggregation;
 
-public class AddPalletAggregationViewModel:ViewModel
+public class AddPalletAggregationViewModel : ViewModel
 {
-         public Pallet CurrentPallet { get; set; }
-        private Box CurrentBox { get; set; }
+    public Pallet CurrentPallet { get; set; }
+    private Box CurrentBox { get; set; }
 
 
-        public ScannedCode PalletCode { get; set; }
-        public ScannedCode BoxCode { get; set; }
-        public ScannedCode ProductCode { get; set; }
+    public ScannedCode PalletCode { get; set; }
+    public ScannedCode BoxCode { get; set; }
+    public ScannedCode ProductCode { get; set; }
 
 
-        public ProcessingCodeService ProcessingCodeService { get; set; }
-        public ReportTaskService ReportTaskService { get; set; }
-        public LocalDb LocalDBService { get; set; }
-        public ErrorsService ErrorsService { get; set; }
+    public ProcessingCodeService ProcessingCodeService { get; set; }
+    public ReportTaskService ReportTaskService { get; set; }
+    public LocalDb LocalDBService { get; set; }
 
-        public AddPalletAggregationViewModel(ProcessingCodeService processingCodeService,
-                                                    ReportTaskService reportTaskService,
-                                                    LocalDb localDBService,
-                                                    ErrorsService errorsService)
+    private void ProccessingPalletCode()
+    {
+        if (PalletCode.Code.Replace("\0", "") == string.Empty)
         {
-            PalletCode = new ScannedCode();
-            PalletCode.ProccessingScannedCode += ProccessingPalletCode;
-
-            BoxCode = new ScannedCode();
-            BoxCode.IsEnabledFieldScannedCode = false;
-            BoxCode.ProccessingScannedCode += ProccessingBoxCode;
-
-            ProductCode = new ScannedCode();
-            ProductCode.IsEnabledFieldScannedCode = false;
-            ProductCode.ProccessingScannedCode += ProccessingProductCode;
-
-            ProcessingCodeService = processingCodeService;
-            ReportTaskService = reportTaskService;
-            LocalDBService = localDBService;
-            ErrorsService = errorsService;
+            return;
         }
 
-        private void ProccessingPalletCode()
+        CurrentPallet = null;
+
+        string code = PalletCode.Code.Trim();
+        if (code.Contains("\0"))
         {
-            if (PalletCode.Code.Replace("\0", "") == string.Empty)
+            code = code.Replace("\0", "");
+
+            bool isPalletCode = ProcessingCodeService.IsPalletCode(code);
+            if (isPalletCode)
             {
-                return;
-            }
-
-            CurrentPallet = null;
-
-            string code = PalletCode.Code.Trim();
-            if (code.Contains("\0"))
-            {
-                code = code.Replace("\0", "");
-
-                bool isPalletCode = ProcessingCodeService.IsPalletCode(code);
-                if (isPalletCode)
+                bool isPalletCodeInCurrentTask = ProcessingCodeService.IsPalletCodeTheCurrentTask(code);
+                if (isPalletCodeInCurrentTask)
                 {
-                    bool isPalletCodeInCurrentTask = ProcessingCodeService.IsPalletCodeTheCurrentTask(code);
-                    if (isPalletCodeInCurrentTask)
+                    bool isRepeatPalletCode = ProcessingCodeService.IsRepeatPalletCode(code);
+                    if (!isRepeatPalletCode)
                     {
-                        bool isRepeatPalletCode = ProcessingCodeService.IsRepeatPalletCode(code);
-                        if (!isRepeatPalletCode)
+                        Pallet newPallet = new Pallet()
                         {
-                            Pallet newPallet = new Pallet()
-                            {
-                                MarkingCode = code,
-                                ReportTaskId = ReportTaskService.CurrentReportTask.Id,
-                                ReportTaskGuid = ReportTaskService.CurrentReportTask.Guid,
-                                LineId = ReportTaskService.CurrentReportTask.LineId,
-                            };
+                            MarkingCode = code,
+                            ReportTaskId = ReportTaskService.CurrentReportTask.Id,
+                            ReportTaskGuid = ReportTaskService.CurrentReportTask.Guid,
+                            LineId = ReportTaskService.CurrentReportTask.LineId,
+                        };
 
-                            CurrentPallet = LocalDBService.PalletDataService.Create(newPallet);
+                        CurrentPallet = LocalDBService.PalletDataService.Create(newPallet);
 
-                            ReportTaskService.Statistic.PalletCodes.Add(CurrentPallet);
-                            ReportTaskService.Statistic.PalletCodes = new List<Pallet>(ReportTaskService.Statistic.PalletCodes);
-                            ReportTaskService.Statistic.CountBoxInCurrentPallet = 0;
+                        ReportTaskService.Statistic.PalletCodes.Add(CurrentPallet);
+                        ReportTaskService.Statistic.PalletCodes =
+                            new List<Pallet>(ReportTaskService.Statistic.PalletCodes);
+                        ReportTaskService.Statistic.CountBoxInCurrentPallet = 0;
 
-                            PalletCode.StatusScannedCode = $"Код паллеты создан.\n" +
-                                                           $"{code}.\n" +
-                                                           $"Коробов в паллете {CurrentPallet.Boxes.Count}/{ReportTaskService.CurrentReportTask.CountBoxInPallet}.";
+                        PalletCode.StatusScannedCode = $"Код паллеты создан.\n" +
+                                                       $"{code}.\n" +
+                                                       $"Коробов в паллете {CurrentPallet.Boxes.Count}/{ReportTaskService.CurrentReportTask.CountBoxInPallet}.";
 
 
-                            PalletCode.IsErrorStatusScannedCode = false;
-                            BoxCode.IsEnabledFieldScannedCode = true;
-                        }
-                        else
-                        {
-                            PalletCode.StatusScannedCode = $"Введённый код паллеты уже существует.\n" +
-                                                           $"{code}.";
-
-                            PalletCode.IsErrorStatusScannedCode = true;
-
-                            BoxCode.IsEnabledFieldScannedCode = false;
-                            BoxCode.StatusScannedCode = string.Empty;
-                            ProductCode.IsEnabledFieldScannedCode = false;
-                            ProductCode.StatusScannedCode = string.Empty;
-                        }
+                        PalletCode.IsErrorStatusScannedCode = false;
+                        BoxCode.IsEnabledFieldScannedCode = true;
                     }
                     else
                     {
-                        PalletCode.StatusScannedCode = $"Введённый код паллеты не соответствует коду паллеты текущего задания.\n{code}.";
-                        PalletCode.IsErrorStatusScannedCode = true; 
-                        
+                        PalletCode.StatusScannedCode = $"Введённый код паллеты уже существует.\n" +
+                                                       $"{code}.";
+
+                        PalletCode.IsErrorStatusScannedCode = true;
+
                         BoxCode.IsEnabledFieldScannedCode = false;
                         BoxCode.StatusScannedCode = string.Empty;
-
                         ProductCode.IsEnabledFieldScannedCode = false;
                         ProductCode.StatusScannedCode = string.Empty;
                     }
                 }
                 else
                 {
-                    PalletCode.StatusScannedCode = $"Введённый код не соответствует коду паллеты.\n{code}.";
+                    PalletCode.StatusScannedCode =
+                        $"Введённый код паллеты не соответствует коду паллеты текущего задания.\n{code}.";
                     PalletCode.IsErrorStatusScannedCode = true;
 
                     BoxCode.IsEnabledFieldScannedCode = false;
@@ -130,225 +97,270 @@ public class AddPalletAggregationViewModel:ViewModel
                     ProductCode.StatusScannedCode = string.Empty;
                 }
             }
+            else
+            {
+                PalletCode.StatusScannedCode = $"Введённый код не соответствует коду паллеты.\n{code}.";
+                PalletCode.IsErrorStatusScannedCode = true;
 
-            PalletCode.Code = string.Empty;
+                BoxCode.IsEnabledFieldScannedCode = false;
+                BoxCode.StatusScannedCode = string.Empty;
+
+                ProductCode.IsEnabledFieldScannedCode = false;
+                ProductCode.StatusScannedCode = string.Empty;
+            }
         }
 
-        private void ProccessingBoxCode()
+        PalletCode.Code = string.Empty;
+    }
+
+    public ErrorsService ErrorsService { get; set; }
+
+    public AddPalletAggregationViewModel(ProcessingCodeService processingCodeService,
+        ReportTaskService reportTaskService,
+        LocalDb localDBService,
+        ErrorsService errorsService)
+    {
+        PalletCode = new ScannedCode();
+        PalletCode.ProccessingScannedCode += ProccessingPalletCode;
+
+        BoxCode = new ScannedCode();
+        BoxCode.IsEnabledFieldScannedCode = false;
+        BoxCode.ProccessingScannedCode += ProccessingBoxCode;
+
+        ProductCode = new ScannedCode();
+        ProductCode.IsEnabledFieldScannedCode = false;
+        ProductCode.ProccessingScannedCode += ProccessingProductCode;
+
+        ProcessingCodeService = processingCodeService;
+        ReportTaskService = reportTaskService;
+        LocalDBService = localDBService;
+        ErrorsService = errorsService;
+    }
+
+    private void ProccessingBoxCode()
+    {
+        if (BoxCode.Code.Replace("\0", "") == string.Empty)
         {
-            if (BoxCode.Code.Replace("\0", "") == string.Empty)
+            return;
+        }
+
+        CurrentBox = null;
+
+        string code = BoxCode.Code.Trim();
+        if (code.Contains("\0"))
+        {
+            code = code.Replace("\0", "");
+
+            bool isBoxCode = ProcessingCodeService.IsBoxCode(code);
+            if (isBoxCode)
             {
-                return;
-            }
-
-            CurrentBox = null;
-
-            string code = BoxCode.Code.Trim();
-            if (code.Contains("\0"))
-            {
-                code = code.Replace("\0", "");
-
-                bool isBoxCode = ProcessingCodeService.IsBoxCode(code);
-                if (isBoxCode)
+                bool isBoxCodeTheCurrentTask = ProcessingCodeService.IsBoxCodeTheCurrentTask(code);
+                if (isBoxCodeTheCurrentTask)
                 {
-                    bool isBoxCodeTheCurrentTask = ProcessingCodeService.IsBoxCodeTheCurrentTask(code);
-                    if (isBoxCodeTheCurrentTask)
+                    bool isRepeatBoxCode = ProcessingCodeService.IsRepeatBoxCode(code);
+                    if (!isRepeatBoxCode)
                     {
-                        bool isRepeatBoxCode = ProcessingCodeService.IsRepeatBoxCode(code);
-                        if (!isRepeatBoxCode)
+                        Box newBox = new Box()
                         {
-                            Box newBox = new Box()
-                            {
-                                MarkingCode = code,
-                                ReportTaskGuid = ReportTaskService.CurrentReportTask.Guid,
-                                LineId = ReportTaskService.CurrentReportTask.LineId,
-                                PalletId = CurrentPallet.Id
-                            };
+                            MarkingCode = code,
+                            ReportTaskGuid = ReportTaskService.CurrentReportTask.Guid,
+                            LineId = ReportTaskService.CurrentReportTask.LineId,
+                            PalletId = CurrentPallet.Id
+                        };
 
-                            CurrentBox = LocalDBService.BoxDataService.Create(newBox);
+                        CurrentBox = LocalDBService.BoxDataService.Create(newBox);
 
-                            ReportTaskService.Statistic.BoxCodes.Add(CurrentBox);
-                            ReportTaskService.Statistic.CountBoxes++;
+                        ReportTaskService.Statistic.BoxCodes.Add(CurrentBox);
+                        ReportTaskService.Statistic.CountBoxes++;
 
-                            CurrentPallet.Boxes.Add(CurrentBox);
+                        CurrentPallet.Boxes.Add(CurrentBox);
 
-                            if (CurrentPallet == ReportTaskService.Statistic.PalletCodes[^1])
-                            {
-                                ReportTaskService.Statistic.CountBoxInCurrentPallet++;
-                            }
-
-                            PalletCode.StatusScannedCode = $"Код паллеты.\n" +
-                                                            $"{CurrentPallet.MarkingCode}.\n" +
-                                                            $"Коробов в паллете {CurrentPallet.Boxes.Count}/{ReportTaskService.CurrentReportTask.CountBoxInPallet}.";
-
-                            BoxCode.StatusScannedCode = $"Код короба создан.\n" +
-                                                        $"{CurrentBox.MarkingCode}.\n" +
-                                                        $"Продукта в коробе {CurrentBox.Products.Count}/{ReportTaskService.CurrentReportTask.CountProductInBox}.\n" +
-                                                        $"Код паллеты {CurrentPallet.MarkingCode}.";
-
-
-                            BoxCode.IsErrorStatusScannedCode = false;
-                            ProductCode.IsEnabledFieldScannedCode = true;
-
-                            Error newError = new Error { TypeError = "Неполный короб" };
-                            newError.BoxCodes.Add(CurrentBox.MarkingCode);
-                            newError.PalletCodes.Add(CurrentPallet.MarkingCode);
-
-                            ErrorsService.Errors.Add(newError);
-                            ErrorsService.Errors = new List<Error>(ErrorsService.Errors);
-
-                        }
-                        else
+                        if (CurrentPallet == ReportTaskService.Statistic.PalletCodes[^1])
                         {
-                            BoxCode.StatusScannedCode = $"Введённый код короба уже существует.\n" +
-                                                        $"{code}.";
-
-                            var boxes = LocalDBService.BoxDataService.GetAllWithInclude(p => p.MarkingCode.Replace("\u001d", "") == code.Replace("\u001d", "") && p.ReportTaskGuid == ReportTaskService.CurrentReportTask.Guid, p => p.Products).ToList();
-                            for (int i = 0; i < boxes.Count; i++)
-                            {
-                                boxes[i].Pallet = LocalDBService.PalletDataService.Get((int)boxes[i].PalletId);
-                            }
-
-                            foreach (var box in boxes)
-                            {
-                                BoxCode.StatusScannedCode += $"\nКод паллеты {box.Pallet.MarkingCode}.";
-                            }
-
-                            BoxCode.IsErrorStatusScannedCode = true;
-
-                            ProductCode.StatusScannedCode = string.Empty;
-                            ProductCode.IsEnabledFieldScannedCode = false;
+                            ReportTaskService.Statistic.CountBoxInCurrentPallet++;
                         }
+
+                        PalletCode.StatusScannedCode = $"Код паллеты.\n" +
+                                                       $"{CurrentPallet.MarkingCode}.\n" +
+                                                       $"Коробов в паллете {CurrentPallet.Boxes.Count}/{ReportTaskService.CurrentReportTask.CountBoxInPallet}.";
+
+                        BoxCode.StatusScannedCode = $"Код короба создан.\n" +
+                                                    $"{CurrentBox.MarkingCode}.\n" +
+                                                    $"Продукта в коробе {CurrentBox.Products.Count}/{ReportTaskService.CurrentReportTask.CountProductInBox}.\n" +
+                                                    $"Код паллеты {CurrentPallet.MarkingCode}.";
+
+
+                        BoxCode.IsErrorStatusScannedCode = false;
+                        ProductCode.IsEnabledFieldScannedCode = true;
+
+                        Error newError = new Error { TypeError = "Неполный короб" };
+                        newError.BoxCodes.Add(CurrentBox.MarkingCode);
+                        newError.PalletCodes.Add(CurrentPallet.MarkingCode);
+
+                        ErrorsService.Errors.Add(newError);
+                        ErrorsService.Errors = new List<Error>(ErrorsService.Errors);
                     }
                     else
                     {
-                        BoxCode.StatusScannedCode = $"Введённый код короба не соответствует коду короба текущего задания.\n{code}.";
+                        BoxCode.StatusScannedCode = $"Введённый код короба уже существует.\n" +
+                                                    $"{code}.";
+
+                        var boxes = LocalDBService.BoxDataService
+                            .GetAllWithInclude(
+                                p => p.MarkingCode.Replace("\u001d", "") == code.Replace("\u001d", "") &&
+                                     p.ReportTaskGuid == ReportTaskService.CurrentReportTask.Guid, p => p.Products)
+                            .ToList();
+                        for (int i = 0; i < boxes.Count; i++)
+                        {
+                            boxes[i].Pallet = LocalDBService.PalletDataService.Get((int)boxes[i].PalletId);
+                        }
+
+                        foreach (var box in boxes)
+                        {
+                            BoxCode.StatusScannedCode += $"\nКод паллеты {box.Pallet.MarkingCode}.";
+                        }
+
                         BoxCode.IsErrorStatusScannedCode = true;
-                        
+
                         ProductCode.StatusScannedCode = string.Empty;
                         ProductCode.IsEnabledFieldScannedCode = false;
                     }
                 }
                 else
                 {
-                    BoxCode.StatusScannedCode = $"Введённый код не соответствует коду короба.\n{code}.";
+                    BoxCode.StatusScannedCode =
+                        $"Введённый код короба не соответствует коду короба текущего задания.\n{code}.";
                     BoxCode.IsErrorStatusScannedCode = true;
 
                     ProductCode.StatusScannedCode = string.Empty;
                     ProductCode.IsEnabledFieldScannedCode = false;
                 }
             }
+            else
+            {
+                BoxCode.StatusScannedCode = $"Введённый код не соответствует коду короба.\n{code}.";
+                BoxCode.IsErrorStatusScannedCode = true;
 
-            BoxCode.Code = string.Empty;
+                ProductCode.StatusScannedCode = string.Empty;
+                ProductCode.IsEnabledFieldScannedCode = false;
+            }
         }
 
-        private void ProccessingProductCode()
+        BoxCode.Code = string.Empty;
+    }
+
+    private void ProccessingProductCode()
+    {
+        if (ProductCode.Code.Replace("\0", "") == string.Empty)
         {
-            if (ProductCode.Code.Replace("\0", "") == string.Empty)
-            {
-                return;
-            }
+            return;
+        }
 
-            string code = ProductCode.Code.Trim();
-            if (code.Contains("\0"))
-            {
-                code = code.Replace("\0", "");
+        string code = ProductCode.Code.Trim();
+        if (code.Contains("\0"))
+        {
+            code = code.Replace("\0", "");
 
-                bool isProductCode = ProcessingCodeService.IsProductCode(code);
-                if (isProductCode)
+            bool isProductCode = ProcessingCodeService.IsProductCode(code);
+            if (isProductCode)
+            {
+                bool isProductCodeTheCurrentTask = ProcessingCodeService.IsProductCodeTheCurrentTask(code);
+                if (isProductCodeTheCurrentTask)
                 {
-                    bool isProductCodeTheCurrentTask = ProcessingCodeService.IsProductCodeTheCurrentTask(code);
-                    if (isProductCodeTheCurrentTask)
+                    bool isRepeatProductCode = ProcessingCodeService.IsRepeatProductCode(code);
+                    if (!isRepeatProductCode)
                     {
-                        bool isRepeatProductCode = ProcessingCodeService.IsRepeatProductCode(code);
-                        if (!isRepeatProductCode)
+                        Product newProduct = new Product()
                         {
-                            Product newProduct = new Product()
-                            {
-                                MarkingCode = code,
-                                ReportTaskGuid = ReportTaskService.CurrentReportTask.Guid,
-                                LineId = ReportTaskService.CurrentReportTask.LineId,
-                                BoxId = CurrentBox.Id
-                            };
-                            newProduct = LocalDBService.ProductDataService.Create(newProduct);
+                            MarkingCode = code,
+                            ReportTaskGuid = ReportTaskService.CurrentReportTask.Guid,
+                            LineId = ReportTaskService.CurrentReportTask.LineId,
+                            BoxId = CurrentBox.Id
+                        };
+                        newProduct = LocalDBService.ProductDataService.Create(newProduct);
 
-                            CurrentBox.Products.Add(newProduct);
+                        CurrentBox.Products.Add(newProduct);
 
-                            ReportTaskService.Statistic.ProductCodes.Add(newProduct);
-                            ReportTaskService.Statistic.CountProducts++;
+                        ReportTaskService.Statistic.ProductCodes.Add(newProduct);
+                        ReportTaskService.Statistic.CountProducts++;
 
-                            ProductCode.StatusScannedCode = $"Код продукта создан.\n" +
-                                                           $"{code}.\n" +
-                                                           $"Код короба {CurrentBox.MarkingCode}.\n" +
-                                                           $"Код паллеты {CurrentPallet.MarkingCode}.";
-
-                            BoxCode.StatusScannedCode = $"Код короба.\n" +
-                                                        $"{CurrentBox.MarkingCode}.\n" +
-                                                        $"Продукта в коробе {CurrentBox.Products.Count}/{ReportTaskService.CurrentReportTask.CountProductInBox}\n" +
+                        ProductCode.StatusScannedCode = $"Код продукта создан.\n" +
+                                                        $"{code}.\n" +
+                                                        $"Код короба {CurrentBox.MarkingCode}.\n" +
                                                         $"Код паллеты {CurrentPallet.MarkingCode}.";
 
+                        BoxCode.StatusScannedCode = $"Код короба.\n" +
+                                                    $"{CurrentBox.MarkingCode}.\n" +
+                                                    $"Продукта в коробе {CurrentBox.Products.Count}/{ReportTaskService.CurrentReportTask.CountProductInBox}\n" +
+                                                    $"Код паллеты {CurrentPallet.MarkingCode}.";
 
 
-                            PalletCode.StatusScannedCode = $"Код паллеты.\n" +
-                                                            $"{CurrentPallet.MarkingCode}.\n" +
-                                                            $"Коробов в паллете {CurrentPallet.Boxes.Count}/{ReportTaskService.CurrentReportTask.CountBoxInPallet}.";
+                        PalletCode.StatusScannedCode = $"Код паллеты.\n" +
+                                                       $"{CurrentPallet.MarkingCode}.\n" +
+                                                       $"Коробов в паллете {CurrentPallet.Boxes.Count}/{ReportTaskService.CurrentReportTask.CountBoxInPallet}.";
 
 
-                            ProductCode.IsErrorStatusScannedCode = false;
+                        ProductCode.IsErrorStatusScannedCode = false;
 
-                            if (CurrentBox.Products.Count == Convert.ToInt32(ReportTaskService.CurrentReportTask.CountProductInBox))
-                            {
-                                MessageBox.Show("Короб заполнен");
-
-                                var errors = ErrorsService.Errors.FindAll(e => e.BoxCodes.Contains(CurrentBox.MarkingCode) && e.TypeError == "Неполный короб");
-                                foreach (var error in errors)
-                                {
-                                    ErrorsService.Errors.Remove(error);
-                                }
-
-                                ErrorsService.Errors = new List<Error>(ErrorsService.Errors);
-
-                                CurrentBox = null;
-
-                                BoxCode.Code = string.Empty;
-                                BoxCode.StatusScannedCode = string.Empty;
-                                BoxCode.IsEnabledFieldScannedCode = true;
-                                BoxCode.IsErrorStatusScannedCode = true;
-
-                                ProductCode.Code = string.Empty;
-                                ProductCode.StatusScannedCode = string.Empty;
-                                ProductCode.IsEnabledFieldScannedCode = false;
-                            }
-
-                        }
-                        else
+                        if (CurrentBox.Products.Count ==
+                            Convert.ToInt32(ReportTaskService.CurrentReportTask.CountProductInBox))
                         {
-                            ProductCode.StatusScannedCode = $"Введённый код продукта уже существует.\n" +
-                                                            $"{code}.";
+                            MessageBox.Show("Короб заполнен");
 
-                            var products = LocalDBService.ProductDataService.GetAllWithInclude((p => p.MarkingCode.Replace("\u001d", "") == code.Replace("\u001d", "") && p.ReportTaskGuid == ReportTaskService.CurrentReportTask.Guid), p => p.Box, p => p.Pallet).ToList();
-                            foreach (var product in products)
+                            var errors = ErrorsService.Errors.FindAll(e =>
+                                e.BoxCodes.Contains(CurrentBox.MarkingCode) && e.TypeError == "Неполный короб");
+                            foreach (var error in errors)
                             {
-                                ProductCode.StatusScannedCode += $"\nКод короба {product.Box.MarkingCode}.";
-                                ProductCode.StatusScannedCode += $"\nКод паллеты {product.Box.Pallet.MarkingCode}.";
+                                ErrorsService.Errors.Remove(error);
                             }
 
-                            ProductCode.IsErrorStatusScannedCode = true;
+                            ErrorsService.Errors = new List<Error>(ErrorsService.Errors);
+
+                            CurrentBox = null;
+
+                            BoxCode.Code = string.Empty;
+                            BoxCode.StatusScannedCode = string.Empty;
+                            BoxCode.IsEnabledFieldScannedCode = true;
+                            BoxCode.IsErrorStatusScannedCode = true;
+
+                            ProductCode.Code = string.Empty;
+                            ProductCode.StatusScannedCode = string.Empty;
+                            ProductCode.IsEnabledFieldScannedCode = false;
                         }
                     }
                     else
                     {
-                        ProductCode.StatusScannedCode = $"Введённый код продукта не соответствует коду продукта текущего задания.\n{code}.";
+                        ProductCode.StatusScannedCode = $"Введённый код продукта уже существует.\n" +
+                                                        $"{code}.";
+
+                        var products = LocalDBService.ProductDataService
+                            .GetAllWithInclude(
+                                (p => p.MarkingCode.Replace("\u001d", "") == code.Replace("\u001d", "") &&
+                                      p.ReportTaskGuid == ReportTaskService.CurrentReportTask.Guid), p => p.Box,
+                                p => p.Pallet).ToList();
+                        foreach (var product in products)
+                        {
+                            ProductCode.StatusScannedCode += $"\nКод короба {product.Box.MarkingCode}.";
+                            ProductCode.StatusScannedCode += $"\nКод паллеты {product.Box.Pallet.MarkingCode}.";
+                        }
+
                         ProductCode.IsErrorStatusScannedCode = true;
                     }
                 }
                 else
                 {
-                    ProductCode.StatusScannedCode = $"Введённый код не соответствует коду продукта.\n{code}.";
+                    ProductCode.StatusScannedCode =
+                        $"Введённый код продукта не соответствует коду продукта текущего задания.\n{code}.";
                     ProductCode.IsErrorStatusScannedCode = true;
                 }
             }
-
-            ProductCode.Code = string.Empty;
+            else
+            {
+                ProductCode.StatusScannedCode = $"Введённый код не соответствует коду продукта.\n{code}.";
+                ProductCode.IsErrorStatusScannedCode = true;
+            }
         }
+
+        ProductCode.Code = string.Empty;
+    }
 }
