@@ -13,7 +13,7 @@ namespace CC.Data.Services.Base;
 public class DataService<T> where T : Entity
 {
     public string ConnectionString { get; set; }
-    public DbSet<T>? DbSet { get; set; }
+    public DbSet<T> DbSet { get; set; }
 
 
     public DataService(string connectionString)
@@ -22,7 +22,7 @@ public class DataService<T> where T : Entity
     }
 
 
-    public T? Create(T entity)
+    public T Create(T entity)
     {
         using DataBaseContext dbContext = new(ConnectionString);
         if (dbContext.IsConnected)
@@ -38,7 +38,7 @@ public class DataService<T> where T : Entity
         }
     }
 
-    public async Task<T?> CreateAsync(T entity)
+    public async Task<T> CreateAsync(T entity)
     {
         await using DataBaseContext dbContext = new(ConnectionString);
         if (dbContext.IsConnected)
@@ -59,7 +59,7 @@ public class DataService<T> where T : Entity
         using DataBaseContext dbContext = new(ConnectionString);
         if (dbContext.IsConnected)
         {
-            T? entity = dbContext.Set<T>().FirstOrDefault(e => e.Id == id);
+            T entity = dbContext.Set<T>().FirstOrDefault(e => e.Id == id);
             dbContext.Set<T>().Remove(entity!);
             dbContext.SaveChanges();
 
@@ -76,7 +76,7 @@ public class DataService<T> where T : Entity
         await using DataBaseContext dbContext = new(ConnectionString);
         if (dbContext.IsConnected)
         {
-            T? entity = await dbContext.Set<T>().FirstOrDefaultAsync(e => e.Id == id);
+            T entity = await dbContext.Set<T>().FirstOrDefaultAsync(e => e.Id == id);
             dbContext.Set<T>().Remove(entity!);
             await dbContext.SaveChangesAsync();
 
@@ -88,12 +88,12 @@ public class DataService<T> where T : Entity
         }
     }
 
-    public T? Get(int id)
+    public T Get(int id)
     {
         using DataBaseContext dbContext = new(ConnectionString);
         if (dbContext.IsConnected)
         {
-            T? entity = dbContext.Set<T>().FirstOrDefault(e => e.Id == id);
+            T entity = dbContext.Set<T>().FirstOrDefault(e => e.Id == id);
             return entity;
         }
         else
@@ -102,7 +102,7 @@ public class DataService<T> where T : Entity
         }
     }
 
-    public async Task<T?> GetAsync(int id)
+    public async Task<T> GetAsync(int id)
     {
         await using DataBaseContext dbContext = new(ConnectionString);
         if (dbContext.IsConnected)
@@ -116,7 +116,7 @@ public class DataService<T> where T : Entity
         }
     }
 
-    public T? Get(Expression<Func<T, bool>> predicate)
+    public T Get(Expression<Func<T, bool>> predicate)
     {
         using DataBaseContext dbContext = new(ConnectionString);
         if (dbContext.IsConnected)
@@ -130,7 +130,7 @@ public class DataService<T> where T : Entity
         }
     }
 
-    public async Task<T?> GetAsync(Expression<Func<T, bool>> predicate)
+    public async Task<T> GetAsync(Expression<Func<T, bool>> predicate)
     {
         await using DataBaseContext dbContext = new(ConnectionString);
         if (dbContext.IsConnected)
@@ -144,7 +144,7 @@ public class DataService<T> where T : Entity
         }
     }
 
-    public T? GetWithInclude<TProperty>(int id, Expression<Func<T, TProperty>> includePredicate)
+    public T GetWithInclude<TProperty>(int id, Expression<Func<T, TProperty>> includePredicate)
     {
         using DataBaseContext dbContext = new(ConnectionString);
         if (dbContext.IsConnected)
@@ -158,7 +158,7 @@ public class DataService<T> where T : Entity
         }
     }
 
-    public async Task<T?> GetWithIncludeAsync<TProperty>(int id, Expression<Func<T, TProperty>> includePredicate)
+    public async Task<T> GetWithIncludeAsync<TProperty>(int id, Expression<Func<T, TProperty>> includePredicate)
     {
         await using DataBaseContext dbContext = new(ConnectionString);
         if (dbContext.IsConnected)
@@ -172,7 +172,7 @@ public class DataService<T> where T : Entity
         }
     }
 
-    public T? GetWithInclude<TProperty>(Expression<Func<T, bool>> predicate,
+    public T GetWithInclude<TProperty>(Expression<Func<T, bool>> predicate,
         Expression<Func<T, TProperty>> includePredicate)
     {
         using DataBaseContext dbContext = new(ConnectionString);
@@ -188,7 +188,7 @@ public class DataService<T> where T : Entity
     }
 
 
-    public async Task<T?> GetWithIncludeAsync<TProperty>(Expression<Func<T, bool>> predicate,
+    public async Task<T> GetWithIncludeAsync<TProperty>(Expression<Func<T, bool>> predicate,
         Expression<Func<T, TProperty>> includePredicate)
     {
         await using DataBaseContext dbContext = new(ConnectionString);
@@ -203,7 +203,7 @@ public class DataService<T> where T : Entity
         }
     }
 
-    public async Task<T?> GetWithIncludeAsync<TProperty, TProperty2>(Expression<Func<T, bool>> predicate,
+    public async Task<T> GetWithIncludeAsync<TProperty, TProperty2>(Expression<Func<T, bool>> predicate,
         Expression<Func<T, IEnumerable<TProperty>>> includePredicate,
         Expression<Func<TProperty, TProperty2>> thenIncludePredicate)
     {
@@ -220,7 +220,7 @@ public class DataService<T> where T : Entity
         }
     }
 
-    public IEnumerable<T>? GetAll()
+    public IEnumerable<T> GetAll()
     {
         using DataBaseContext dbContext = new(ConnectionString);
         if (dbContext.IsConnected)
@@ -234,7 +234,7 @@ public class DataService<T> where T : Entity
         }
     }
 
-    public IEnumerable<TResult>? GetAll<TResult>(Expression<Func<T, TResult>> selectPredicate)
+    public IEnumerable<TResult> GetAll<TResult>(Expression<Func<T, TResult>> selectPredicate)
     {
         using DataBaseContext dbContext = new(ConnectionString);
         if (dbContext.IsConnected)
@@ -256,7 +256,7 @@ public class DataService<T> where T : Entity
         return entities;
     }
 
-    public IEnumerable<TResult>? GetAll<TResult>(Expression<Func<T, bool>> predicate,
+    public IEnumerable<TResult> GetAll<TResult>(Expression<Func<T, bool>> predicate,
         Expression<Func<T, TResult>> selectPredicate)
     {
         using DataBaseContext dbContext = new(ConnectionString);
@@ -271,7 +271,7 @@ public class DataService<T> where T : Entity
         }
     }
 
-    public IEnumerable<T>? GetAllWithInclude<TProperty>(Expression<Func<T, IEnumerable<TProperty>>> includePredicate)
+    public IEnumerable<T> GetAllWithInclude<TProperty>(Expression<Func<T, IEnumerable<TProperty>>> includePredicate)
     {
         using DataBaseContext dbContext = new(ConnectionString);
         if (dbContext.IsConnected)
@@ -285,7 +285,7 @@ public class DataService<T> where T : Entity
         }
     }
 
-    public IEnumerable<T>? GetAllWithInclude<TProperty>(Expression<Func<T, TProperty>> includePredicate)
+    public IEnumerable<T> GetAllWithInclude<TProperty>(Expression<Func<T, TProperty>> includePredicate)
     {
         using DataBaseContext dbContext = new(ConnectionString);
         if (dbContext.IsConnected)
@@ -299,7 +299,7 @@ public class DataService<T> where T : Entity
         }
     }
 
-    public IEnumerable<T>? GetAllWithInclude<TProperty, TProperty2>(
+    public IEnumerable<T> GetAllWithInclude<TProperty, TProperty2>(
         Expression<Func<T, IEnumerable<TProperty>>> includePredicate,
         Expression<Func<TProperty, TProperty2>> thenIncludePredicate)
     {
@@ -316,7 +316,7 @@ public class DataService<T> where T : Entity
         }
     }
 
-    public IEnumerable<T>? GetAllWithInclude<TProperty, TProperty2>(Expression<Func<T, TProperty>> includePredicate,
+    public IEnumerable<T> GetAllWithInclude<TProperty, TProperty2>(Expression<Func<T, TProperty>> includePredicate,
         Expression<Func<TProperty, TProperty2>> thenIncludePredicate)
     {
         using DataBaseContext dbContext = new(ConnectionString);
@@ -332,7 +332,7 @@ public class DataService<T> where T : Entity
         }
     }
 
-    public IEnumerable<T>? GetAllWithInclude<TProperty>(Expression<Func<T, bool>> predicate,
+    public IEnumerable<T> GetAllWithInclude<TProperty>(Expression<Func<T, bool>> predicate,
         Expression<Func<T, IEnumerable<TProperty>>> includePredicate)
     {
         using DataBaseContext dbContext = new(ConnectionString);
@@ -347,7 +347,7 @@ public class DataService<T> where T : Entity
         }
     }
 
-    public IEnumerable<T>? GetAllWithInclude<TProperty>(Expression<Func<T, bool>> predicate,
+    public IEnumerable<T> GetAllWithInclude<TProperty>(Expression<Func<T, bool>> predicate,
         Expression<Func<T, TProperty>> includePredicate)
     {
         using DataBaseContext dbContext = new(ConnectionString);
@@ -362,7 +362,7 @@ public class DataService<T> where T : Entity
         }
     }
 
-    public IEnumerable<T>? GetAllWithInclude<TProperty, TProperty2>(Expression<Func<T, bool>> predicate,
+    public IEnumerable<T> GetAllWithInclude<TProperty, TProperty2>(Expression<Func<T, bool>> predicate,
         Expression<Func<T, IEnumerable<TProperty>>> includePredicate,
         Expression<Func<TProperty, TProperty2>> thenIncludePredicate)
     {
@@ -379,7 +379,7 @@ public class DataService<T> where T : Entity
         }
     }
 
-    public IEnumerable<T>? GetAllWithInclude<TProperty, TProperty2>(Expression<Func<T, bool>> predicate,
+    public IEnumerable<T> GetAllWithInclude<TProperty, TProperty2>(Expression<Func<T, bool>> predicate,
         Expression<Func<T, TProperty>> includePredicate, Expression<Func<TProperty, TProperty2>> thenIncludePredicate)
     {
         using DataBaseContext dbContext = new(ConnectionString);
@@ -395,7 +395,7 @@ public class DataService<T> where T : Entity
         }
     }
 
-    public T? Update(int id, T entity)
+    public T Update(int id, T entity)
     {
         using DataBaseContext dbContext = new(ConnectionString);
         if (dbContext.IsConnected)
@@ -413,7 +413,7 @@ public class DataService<T> where T : Entity
         }
     }
 
-    public async Task<T?> UpdateAsync(int id, T entity)
+    public async Task<T> UpdateAsync(int id, T entity)
     {
         await using DataBaseContext dbContext = new(ConnectionString);
         if (dbContext.IsConnected)

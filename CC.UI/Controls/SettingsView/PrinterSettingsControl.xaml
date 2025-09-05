@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:CC.UI.Controls.SettingsView"
              xmlns:settings="clr-namespace:CC.Data.Entities.Settings;assembly=CC.Data"
              xmlns:settings1="clr-namespace:CC.UI.ViewModels.Settings"
              mc:Ignorable="d"
@@ -12,11 +11,11 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../../Styles/Common.xaml" />
-                <ResourceDictionary Source="../../Styles/Border.xaml" />
-                <ResourceDictionary Source="../../Styles/TextBlock.xaml" />
-                <ResourceDictionary Source="../../Styles/TextBox.xaml" />
-                <ResourceDictionary Source="../../Styles/Button.xaml" />
+                <ResourceDictionary Source="/CC.UI;component/Styles/Common.xaml" />
+                <ResourceDictionary Source="/CC.UI;component/Styles/Border.xaml" />
+                <ResourceDictionary Source="/CC.UI;component/Styles/TextBlock.xaml" />
+                <ResourceDictionary Source="/CC.UI;component/Styles/TextBox.xaml" />
+                <ResourceDictionary Source="/CC.UI;component/Styles/Button.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <Style TargetType="TextBlock" BasedOn="{StaticResource HeaderFieldTextBlockStyle}"></Style>
@@ -59,7 +58,7 @@
                         <ColumnDefinition Width="auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBox x:Name="pathTextBlock"
+                    <TextBox x:Name="PathTextBlock"
                              Grid.Column="0" Text="{Binding Path,UpdateSourceTrigger=PropertyChanged }" />
                     <Button Grid.Column="1" Click="Button_Click" />
                 </Grid>

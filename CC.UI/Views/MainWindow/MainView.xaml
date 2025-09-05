@@ -59,8 +59,6 @@
                     <mainView:ButtonsPallet Grid.Column="4" VerticalAlignment="Top" />
                 </Grid>
             </Grid>
-
-            <common:ReadCameraResultTableControl Grid.Row="3" />
         </Grid>
     </Border>
 </UserControl>

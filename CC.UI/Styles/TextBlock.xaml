@@ -21,6 +21,7 @@
 
     <Style x:Key="HeaderBodyTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource HeaderTextBlockStyle}">
         <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HorizontalAlignment" Value="Center"></Setter>
         <Setter Property="Foreground" Value="Black"/>
         <Setter Property="Margin" Value="10"/>
     </Style>
@@ -35,6 +36,7 @@
     <Style x:Key="HeaderFieldTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource HeaderBodyTextBlockStyle}">
         <Setter Property="Foreground" Value="Black"/>
         <Setter Property="FontWeight" Value="Regular"/>
+        
         <Setter Property="TextWrapping" Value="Wrap"/>
         <Setter Property="Margin" Value="10 10 10 5"/>
     </Style>
@@ -56,7 +58,7 @@
     <Style x:Key="LineNameTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource HeaderTextBlockStyle}">
         <Setter Property="Background" Value="#03045e"/>
         <Setter Property="Foreground" Value="LightGray"/>
-        <Setter Property="Padding" Value="20"/>
+        <Setter Property="Padding" Value="3.5"/>
         <Setter Property="Margin" Value="0"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
     </Style>

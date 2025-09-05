@@ -55,7 +55,7 @@
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderBrush" Value="DarkGray"/>
         <Setter Property="Foreground" Value="Black"/>
-        <Setter Property="BorderThickness" Value="2"/>
+        <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Border.CornerRadius" Value="15"/>
         <Setter Property="Padding" Value="10 5"/>
         <Setter Property="FontSize" Value="14"/>
@@ -94,6 +94,49 @@
 
                 <Setter Property="BorderBrush" Value="#015DFE"/>
             </MultiTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- PasswordBox styled similar to TextBoxStyle -->
+    <ControlTemplate x:Key="PasswordBoxControlTemplate" TargetType="PasswordBox">
+        <Border x:Name="border"
+                Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                CornerRadius="{TemplateBinding Border.CornerRadius}"
+                SnapsToDevicePixels="True"
+                Padding="{TemplateBinding Padding}">
+            <ScrollViewer x:Name="PART_ContentHost"
+                          Focusable="false"
+                          HorizontalScrollBarVisibility="Hidden"
+                          VerticalScrollBarVisibility="Hidden"
+                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+        </Border>
+    </ControlTemplate>
+
+    <Style x:Key="PasswordBoxStyle" TargetType="{x:Type PasswordBox}">
+        <Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Template" Value="{StaticResource PasswordBoxControlTemplate}"/>
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="DarkGray"/>
+        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Border.CornerRadius" Value="15"/>
+        <Setter Property="Padding" Value="10 5"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Margin" Value="10 5"/>
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value="0.6"/>
+                <Setter Property="Foreground" Value="Gray"/>
+            </Trigger>
+            <Trigger Property="IsKeyboardFocused" Value="True">
+                <Setter Property="BorderBrush" Value="#015DFE"/>
+            </Trigger>
         </Style.Triggers>
     </Style>
 </ResourceDictionary>

@@ -4,13 +4,13 @@ namespace CC.Data.Entities.Settings;
 
 public class DeviceSettings : ObservableObject
 {
-    private string? _name;
-    private string? _ip;
+    private string _name;
+    private string _ip;
     private int _port;
     private bool _isUsed;
-    private string? _path;
+    private string _path;
 
-    public string? Name
+    public string Name
     {
         get => _name;
         set
@@ -20,7 +20,7 @@ public class DeviceSettings : ObservableObject
         }
     }
 
-    public string? Ip
+    public string Ip
     {
         get => _ip;
         set
@@ -50,7 +50,7 @@ public class DeviceSettings : ObservableObject
         }
     }
 
-    public string? Path
+    public string Path
     {
         get => _path;
         set

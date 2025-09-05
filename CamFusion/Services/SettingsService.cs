@@ -33,8 +33,8 @@ public class SettingsService : ObservableObject, ISettingsService
         {
             Line = new LineSettings()
             {
-                FullName = "Trepko",
-                ShortName = "Trepko",
+                FullName = "test",
+                ShortName = "test",
                 LineId = 3,
                 PathSaveReportTaskFiles = @"",
                 PathLoadNomenclatureFiles = @"",
@@ -96,7 +96,7 @@ public class SettingsService : ObservableObject, ISettingsService
                 IsAuthentification = false,
                 Login = "",
                 Password = "",
-                IsUsed = true,
+                IsUsed = false,
             }
         };
     }

@@ -28,9 +28,9 @@ public class LocalDb
     {
         Device = new Device
         {
-            Name = Settings.LocalDb.Name,
-            Address = Settings.LocalDb.ConnectionString,
-            IsUsed = Settings.LocalDb.IsUsed,
+            Name = Settings.LocalDb?.Name ?? "LocalDb",
+            Address = Settings.LocalDb?.ConnectionString ?? throw new InvalidOperationException("No connection string"),
+            IsUsed = Settings.LocalDb?.IsUsed ?? false
         };
 
         NomenclatureDataService = new NomenclatureDataService(Device.Address);
@@ -46,12 +46,13 @@ public class LocalDb
         using var dBContext = new DataBaseContext(Device.Address);
     }
 
-
+    
     private void DBContext_ConnectionChanged(DataBaseContext db, DateTime datetime, DbConnectionState connectionState)
     {
         if (db.IsConnected != Device.IsConnected)
         {
-            ConnectionChanged(db, datetime, connectionState);
+            // вызов события только если есть подписчики
+            ConnectionChanged?.Invoke(db, datetime, connectionState);
 
             if (db.ConnectionString == Device.Address)
             {
@@ -59,4 +60,5 @@ public class LocalDb
             }
         }
     }
+
 }

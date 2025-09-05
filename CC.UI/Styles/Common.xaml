@@ -5,8 +5,11 @@
                     xmlns:aggregation="clr-namespace:CC.UI.Views.Aggregation"
                     xmlns:viewmodels1="clr-namespace:CC.UI.ViewModels.Aggregation"
                     xmlns:settings="clr-namespace:CC.UI.Views.Settings"
-                    xmlns:settings1="clr-namespace:CC.UI.ViewModels.Settings">
-  <DataTemplate DataType="{x:Type viewmodels:MainViewModel}">
+                    xmlns:settings1="clr-namespace:CC.UI.ViewModels.Settings"
+                    xmlns:viewmodelsLogin="clr-namespace:CC.UI.ViewModels.MainWindow"
+                    xmlns:viewsLogin="clr-namespace:CC.UI.Views.MainWindow">
+    
+    <DataTemplate DataType="{x:Type viewmodels:MainViewModel}">
         <mainWindow:MainView/>
     </DataTemplate>
 
@@ -52,6 +55,10 @@
 
     <DataTemplate DataType="{x:Type viewmodels:SettingsViewModel}">
         <mainWindow:SettingsView/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type viewmodelsLogin:LoginViewModel}">
+        <viewsLogin:LoginView/>
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type settings1:LineSettingsViewModel}">

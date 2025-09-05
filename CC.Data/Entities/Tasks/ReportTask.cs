@@ -61,7 +61,7 @@ public class ReportTask : Entity
         {
             _manufactureDate = value;
             ExpiryDateInDays = Nomenclature != null
-                ? Convert.ToInt32(Nomenclature.Attributes.FirstOrDefault(c => c.Code == 11).Value)
+                ? Convert.ToInt32(Nomenclature.Attributes.FirstOrDefault(c => c.Code == 11)!.Value)
                 : 0;
             ExpiryDate = ManufactureDate.AddDays(ExpiryDateInDays);
             OnPropertyChanged(nameof(ManufactureDate));

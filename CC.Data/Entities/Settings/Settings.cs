@@ -5,16 +5,16 @@ namespace CC.Data.Entities.Settings;
 
 public class Settings : Entity, ICloneable
 {
-    private LineSettings? _line;
-    private DeviceSettings? _productCameraMaster;
-    private DeviceSettings? _productCameraSlave;
-    private DeviceSettings? _boxCamera;
-    private DeviceSettings? _boxPrinter;
-    private DeviceSettings? _palletPrinter;
-    private DbSettings? _serverDb;
+    private LineSettings _line;
+    private DeviceSettings _productCameraMaster;
+    private DeviceSettings _productCameraSlave;
+    private DeviceSettings _boxCamera;
+    private DeviceSettings _boxPrinter;
+    private DeviceSettings _palletPrinter;
+    private DbSettings _serverDb;
 
 
-    public LineSettings? Line
+    public LineSettings Line
     {
         get => _line;
         set
@@ -24,7 +24,7 @@ public class Settings : Entity, ICloneable
         }
     }
 
-    public DeviceSettings? ProductCameraMaster
+    public DeviceSettings ProductCameraMaster
     {
         get => _productCameraMaster;
         set
@@ -34,7 +34,7 @@ public class Settings : Entity, ICloneable
         }
     }
 
-    public DeviceSettings? ProductCameraSlave
+    public DeviceSettings ProductCameraSlave
     {
         get => _productCameraSlave;
         set
@@ -44,7 +44,7 @@ public class Settings : Entity, ICloneable
         }
     }
 
-    public DeviceSettings? BoxCamera
+    public DeviceSettings BoxCamera
     {
         get => _boxCamera;
         set
@@ -54,7 +54,7 @@ public class Settings : Entity, ICloneable
         }
     }
 
-    public DeviceSettings? BoxPrinter
+    public DeviceSettings BoxPrinter
     {
         get => _boxPrinter;
         set
@@ -64,7 +64,7 @@ public class Settings : Entity, ICloneable
         }
     }
 
-    public DeviceSettings? PalletPrinter
+    public DeviceSettings PalletPrinter
     {
         get => _palletPrinter;
         set
@@ -74,7 +74,7 @@ public class Settings : Entity, ICloneable
         }
     }
 
-    public DbSettings? ServerDb
+    public DbSettings ServerDb
     {
         get => _serverDb;
         set
@@ -180,7 +180,6 @@ public class Settings : Entity, ICloneable
         Settings? settings = obj as Settings;
         var isEqual =
             settings != null &&
-            settings.Line != null &&
             settings.Line.FullName == Line!.FullName &&
             settings.Line.ShortName == Line.ShortName &&
             settings.Line.LineId == Line.LineId &&

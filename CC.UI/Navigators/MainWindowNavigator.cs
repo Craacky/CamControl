@@ -39,6 +39,9 @@ public enum MainWindowViewType
         public PrinterViewModel PrinterViewModel { get; set; }
         public ErrorsViewModel ErrorsViewModel { get; set; }
         public SettingsViewModel SettingsViewModel { get; set; }
+        public LoginViewModel LoginViewModel { get; set; }
+
+        public bool IsSettingsAuthorized { get; set; }
 
 
         private ICommand updateCurrentViewModelCommand;
@@ -51,25 +54,44 @@ public enum MainWindowViewType
                 switch (viewType)
                 {
                     case MainWindowViewType.MainView:
+                        if (CurrentViewModel is SettingsViewModel)
+                            IsSettingsAuthorized = false;
                         CurrentViewModel = MainViewModel;
                         break;
                     case MainWindowViewType.ReportTasksView:
+                        if (CurrentViewModel is SettingsViewModel)
+                            IsSettingsAuthorized = false;
                         CurrentViewModel = ReportTasksViewModel;
                         break;
                     case MainWindowViewType.HandleAggregationView:
+                        if (CurrentViewModel is SettingsViewModel)
+                            IsSettingsAuthorized = false;
                         CurrentViewModel = HandleAggregationViewModel;
                         break;
                     case MainWindowViewType.EventsView:
+                        if (CurrentViewModel is SettingsViewModel)
+                            IsSettingsAuthorized = false;
                         CurrentViewModel = EventsViewModel;
                         break;
                     case MainWindowViewType.PrinterView:
+                        if (CurrentViewModel is SettingsViewModel)
+                            IsSettingsAuthorized = false;
                         CurrentViewModel = PrinterViewModel;
                         break;
                     case MainWindowViewType.ErrorsView:
+                        if (CurrentViewModel is SettingsViewModel)
+                            IsSettingsAuthorized = false;
                         CurrentViewModel = ErrorsViewModel;
                         break;
                     case MainWindowViewType.SettingsView:
-                        CurrentViewModel = new SettingsViewModel(SettingsViewModel.SettingsService, SettingsViewModel.DeviceService, SettingsViewModel.ReportTaskService);
+                        if (!IsSettingsAuthorized)
+                        {
+                            CurrentViewModel = LoginViewModel;
+                        }
+                        else
+                        {
+                            CurrentViewModel = new SettingsViewModel(SettingsViewModel.SettingsService, SettingsViewModel.DeviceService, SettingsViewModel.ReportTaskService);
+                        }
                         break;
                     default:
                         break;
@@ -84,7 +106,8 @@ public enum MainWindowViewType
                                    EventsViewModel eventsViewModel, 
                                    PrinterViewModel printerViewModel, 
                                    ErrorsViewModel errorsViewModel,
-                                   SettingsViewModel settingsViewModel)
+                                   SettingsViewModel settingsViewModel,
+                                   LoginViewModel loginViewModel)
         {
             MainViewModel = mainViewModel;
             ReportTasksViewModel = reportTasksViewModel;
@@ -93,6 +116,7 @@ public enum MainWindowViewType
             PrinterViewModel = printerViewModel;
             ErrorsViewModel = errorsViewModel;
             SettingsViewModel = settingsViewModel;
+            LoginViewModel = loginViewModel;
 
             updateCurrentViewModelCommand = new RelayCommand(OnUpdateCurrentViewModelCommandExecuted, CanUpdateCurrentViewModelCommandExecute);
         }

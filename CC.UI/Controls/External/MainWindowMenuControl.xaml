@@ -11,8 +11,8 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Styles/Border.xaml" />
-                <ResourceDictionary Source="/Styles/Button.xaml" />
+                <ResourceDictionary Source="/CC.UI;component/Styles/Border.xaml" />
+                <ResourceDictionary Source="/CC.UI;component/Styles/Button.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <Style TargetType="RadioButton" BasedOn="{StaticResource MainWindowMenuRadioButtonStyle}"></Style>
@@ -26,16 +26,9 @@
                 <RowDefinition Height="auto" />
             </Grid.RowDefinitions>
 
-            <Border Grid.Row="0"
-                    Style="{StaticResource MainWindowMenuBorderStyle}">
+            <Border Grid.Row="0" Style="{StaticResource MainWindowMenuBorderStyle}">
                 <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto" />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-
-                    <UniformGrid Rows="7"
-                                 Grid.Row="0">
+                    <UniformGrid Rows="7">
                         <RadioButton Content="Главная"
                                      Tag="&#xF0E2;"
                                      Command="{Binding Navigator.UpdateCurrentViewModelCommand}"

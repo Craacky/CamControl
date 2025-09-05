@@ -87,11 +87,13 @@
                                 <Setter.Value>
                                     <ControlTemplate TargetType="ListBoxItem">
                                         <Border Background="{TemplateBinding Background}"
-                                                BorderBrush="{TemplateBinding BorderBrush}"
-                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                BorderBrush="#ced4da"
+                                                BorderThickness=" 0 0 1 1"
                                                 Padding="{TemplateBinding Padding}"
                                                 Width="{Binding RelativeSource={RelativeSource Mode=TemplatedParent},Path=ActualWidth, UpdateSourceTrigger=PropertyChanged}"
                                                 Style="{StaticResource TableBodyBorderStyle}"
+                                                CornerRadius="15"
+
                                                 Height="70">
                                             <Grid>
                                                 <Grid.Resources>

@@ -10,8 +10,8 @@ namespace CC.UI.ViewModels.Windows;
 
 public class MainWindowViewModel : ViewModel
 {
-    private ICommand closeWindowCommand;
-    public ICommand CloseWindowCommand => closeWindowCommand;
+    private ICommand _closeWindowCommand;
+    public ICommand CloseWindowCommand => _closeWindowCommand;
     private bool CanCloseWindowCommandExecute(object p) => true;
 
     private void OnCloseWindowCommandExecuted(object p)
@@ -36,7 +36,7 @@ public class MainWindowViewModel : ViewModel
         SettingsService = settingsService;
         ErrorsService = errorsService;
 
-        closeWindowCommand = new RelayCommand(OnCloseWindowCommandExecuted, CanCloseWindowCommandExecute);
+        _closeWindowCommand = new RelayCommand(OnCloseWindowCommandExecuted, CanCloseWindowCommandExecute);
 
         Navigator.UpdateCurrentViewModelCommand.Execute(MainWindowViewType.ReportTasksView);
     }

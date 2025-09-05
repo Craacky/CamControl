@@ -19,11 +19,11 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Styles/Common.xaml"/>
-                <ResourceDictionary Source="/Styles/Border.xaml"/>
-                <ResourceDictionary Source="/Styles/Button.xaml"/>
-                <ResourceDictionary Source="/Styles/TextBlock.xaml"/>
-                <ResourceDictionary Source="/Styles/TextBox.xaml"/>
+                <ResourceDictionary Source="/CC.UI;component/Styles/Common.xaml"/>
+                <ResourceDictionary Source="/CC.UI;component/Styles/Border.xaml"/>
+                <ResourceDictionary Source="/CC.UI;component/Styles/Button.xaml"/>
+                <ResourceDictionary Source="/CC.UI;component/Styles/TextBlock.xaml"/>
+                <ResourceDictionary Source="/CC.UI;component/Styles/TextBox.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>

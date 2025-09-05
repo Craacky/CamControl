@@ -9,6 +9,19 @@ namespace CC.UI.ViewModels.MainWindow;
 
 public class MainViewModel:ViewModel
 {
+     private ICommand pauseCurrentTaskCommand;
+        public ICommand PauseCurrentTaskCommand => pauseCurrentTaskCommand;
+        private bool CanPauseCurrentTaskCommandExecute(object p)
+        {
+            return ReportTaskService.CurrentReportTask != null && ReportTaskService.CurrentReportTask.Status == "Запущено";
+        }
+        private void OnPauseCurrentTaskCommandExecuted(object p)
+        {
+            if (ReportTaskService.CurrentReportTask == null) return;
+            ReportTaskService.CurrentReportTask.Status = "Остановлено";
+            ReportTaskService.UpdateReportTask(ReportTaskService.CurrentReportTask);
+            DeviceService.StopDevices();
+        }
      private ICommand closePalletCommand;
         public ICommand ClosePalletCommand => closePalletCommand;
         private bool CanClosePalletCommandExecute(object p)
@@ -51,6 +64,7 @@ public class MainViewModel:ViewModel
 
             closePalletCommand = new RelayCommand(OnClosePalletCommandlCommandExecuted, CanClosePalletCommandExecute);
             addBoxesToPreviousPalletCommand = new RelayCommand(OnAddBoxesToPreviousPalletCommandExecuted, CanAddBoxesToPreviousPalletCommandExecute);
+            pauseCurrentTaskCommand = new RelayCommand(OnPauseCurrentTaskCommandExecuted, CanPauseCurrentTaskCommandExecute);
         }
 
 }
