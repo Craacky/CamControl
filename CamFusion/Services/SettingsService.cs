@@ -92,7 +92,7 @@ public class SettingsService : ObservableObject, ISettingsService
             {
                 Name = "База данных (сервер)",
                 ServerName = "localhost",
-                DatabaseName = "camfusion",
+                DatabaseName = "CamFusion",
                 IsAuthentification = false,
                 Login = "",
                 Password = "",

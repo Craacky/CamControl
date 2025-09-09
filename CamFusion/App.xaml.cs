@@ -53,16 +53,16 @@ public partial class App
         try
         {
 
-            Settings.LocalDb = new DbSettings()
-            {
-                Name = "База данных (локальная)",
-                ServerName = "localhost",
-                DatabaseName = "prommark1M",
-                IsAuthentification = false,
-                Login = "",
-                Password = "",
-                IsUsed = true,
-            };
+            // Settings.LocalDb = new DbSettings()
+            // {
+            //     Name = "База данных (локальная)",
+            //     ServerName = "localhost",
+            //     DatabaseName = "camfusion",
+            //     IsAuthentification = false,
+            //     Login = "",
+            //     Password = "",
+            //     IsUsed = true,
+            // };
             LocalDbService = new LocalDb();
 
             SettingsService = new SettingsService(LocalDbService);
