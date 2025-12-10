@@ -40,6 +40,9 @@ public class NomenclatureService : ObservableObject
 
         _isStartLodingNomenclatureAsync = false;
         Nomenclatures = new List<Nomenclature>();
+
+        // ensure JsonService is initialized to avoid NRE on startup
+        JsonService = new JsonService();
     }
 
 

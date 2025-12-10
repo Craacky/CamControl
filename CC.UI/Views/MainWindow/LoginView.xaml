@@ -25,16 +25,25 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Row="0" HorizontalAlignment="Center" Text="Вход" Style="{StaticResource HeaderTextBlockStyle}"/>
 
             <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="20">
                 <TextBlock Text="Имя пользователя"/>
-                <TextBox  Width="200" Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource TextBoxStyle}"/>
+                <TextBox  Width="200"
+                          x:Name="UsernameBox"
+                          Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"
+                          Style="{StaticResource TextBoxStyle}"
+                          KeyDown="UsernameBox_KeyDown"/>
 
                 <TextBlock Text="Пароль" Margin="0 10 0 0"/>
-                <PasswordBox Width="200" x:Name="PasswordBox" PasswordChanged="PasswordBox_OnPasswordChanged" Style="{StaticResource PasswordBoxStyle}" />
+                <PasswordBox Width="200"
+                             x:Name="PasswordBox"
+                             PasswordChanged="PasswordBox_OnPasswordChanged"
+                             Style="{StaticResource PasswordBoxStyle}"
+                             KeyDown="PasswordBox_KeyDown" />
             </StackPanel>
 
             <Button Grid.Row="2"
@@ -45,6 +54,12 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Padding="50 10"/>
+
+            <TextBlock Grid.Row="3"
+                       Text="{Binding ErrorMessage}"
+                       Foreground="Red"
+                       HorizontalAlignment="Center"
+                       Margin="0,10,0,0"/>
         </Grid>
     </Border>
 </UserControl>

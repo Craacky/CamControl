@@ -6,11 +6,14 @@ namespace CC.Data.Entities.Settings;
 public class Settings : Entity, ICloneable
 {
     private LineSettings _line;
-    private DeviceSettings _productCameraMaster;
-    private DeviceSettings _productCameraSlave;
-    private DeviceSettings _boxCamera;
+    private DeviceSettings _statisticCamera;
+    private DeviceSettings _productCamera1;
+    private DeviceSettings _productCamera2;
+    private DeviceSettings _verificationCamera1;
+    private DeviceSettings _verificationCamera2;
     private DeviceSettings _boxPrinter;
     private DeviceSettings _palletPrinter;
+    private DeviceSettings _transportPrinter;
     private DbSettings _serverDb;
 
 
@@ -24,33 +27,53 @@ public class Settings : Entity, ICloneable
         }
     }
 
-    public DeviceSettings ProductCameraMaster
+    public DeviceSettings StatisticCamera
     {
-        get => _productCameraMaster;
+        get => _statisticCamera;
         set
         {
-            _productCameraMaster = value;
-            OnPropertyChanged(nameof(ProductCameraMaster));
+            _statisticCamera = value;
+            OnPropertyChanged(nameof(StatisticCamera));
         }
     }
 
-    public DeviceSettings ProductCameraSlave
+    public DeviceSettings ProductCamera1
     {
-        get => _productCameraSlave;
+        get => _productCamera1;
         set
         {
-            _productCameraSlave = value;
-            OnPropertyChanged(nameof(ProductCameraSlave));
+            _productCamera1 = value;
+            OnPropertyChanged(nameof(ProductCamera1));
         }
     }
 
-    public DeviceSettings BoxCamera
+    public DeviceSettings ProductCamera2
     {
-        get => _boxCamera;
+        get => _productCamera2;
         set
         {
-            _boxCamera = value;
-            OnPropertyChanged(nameof(BoxCamera));
+            _productCamera2 = value;
+            OnPropertyChanged(nameof(ProductCamera2));
+        }
+    }
+
+    public DeviceSettings VerificationCamera1
+    {
+        get => _verificationCamera1;
+        set
+        {
+            _verificationCamera1 = value;
+            OnPropertyChanged(nameof(VerificationCamera1));
+        }
+    }
+
+    public DeviceSettings VerificationCamera2
+    {
+        get => _verificationCamera2;
+        set
+        {
+            _verificationCamera2 = value;
+            OnPropertyChanged(nameof(VerificationCamera2));
         }
     }
 
@@ -71,6 +94,16 @@ public class Settings : Entity, ICloneable
         {
             _palletPrinter = value;
             OnPropertyChanged(nameof(PalletPrinter));
+        }
+    }
+
+    public DeviceSettings TransportPrinter
+    {
+        get => _transportPrinter;
+        set
+        {
+            _transportPrinter = value;
+            OnPropertyChanged(nameof(TransportPrinter));
         }
     }
 
@@ -115,31 +148,49 @@ public class Settings : Entity, ICloneable
                     JobStoragePeriodInDays = Line.JobStoragePeriodInDays
                 },
 
-                ProductCameraMaster = new DeviceSettings()
+                StatisticCamera = new DeviceSettings()
                 {
-                    Name = ProductCameraMaster!.Name,
-                    Ip = ProductCameraMaster.Ip,
-                    Port = ProductCameraMaster.Port,
-                    IsUsed = ProductCameraMaster.IsUsed,
-                    Path = ProductCameraMaster.Path
+                    Name = StatisticCamera!.Name,
+                    Ip = StatisticCamera.Ip,
+                    Port = StatisticCamera.Port,
+                    IsUsed = StatisticCamera.IsUsed,
+                    Path = StatisticCamera.Path
                 },
 
-                ProductCameraSlave = new DeviceSettings()
+                ProductCamera1 = new DeviceSettings()
                 {
-                    Name = ProductCameraSlave!.Name,
-                    Ip = ProductCameraSlave.Ip,
-                    Port = ProductCameraSlave.Port,
-                    IsUsed = ProductCameraSlave.IsUsed,
-                    Path = ProductCameraSlave.Path
+                    Name = ProductCamera1!.Name,
+                    Ip = ProductCamera1.Ip,
+                    Port = ProductCamera1.Port,
+                    IsUsed = ProductCamera1.IsUsed,
+                    Path = ProductCamera1.Path
                 },
 
-                BoxCamera = new DeviceSettings()
+                ProductCamera2 = new DeviceSettings()
                 {
-                    Name = BoxCamera!.Name,
-                    Ip = BoxCamera.Ip,
-                    Port = BoxCamera.Port,
-                    IsUsed = BoxCamera.IsUsed,
-                    Path = BoxCamera.Path
+                    Name = ProductCamera2!.Name,
+                    Ip = ProductCamera2.Ip,
+                    Port = ProductCamera2.Port,
+                    IsUsed = ProductCamera2.IsUsed,
+                    Path = ProductCamera2.Path
+                },
+
+                VerificationCamera1 = new DeviceSettings()
+                {
+                    Name = VerificationCamera1!.Name,
+                    Ip = VerificationCamera1.Ip,
+                    Port = VerificationCamera1.Port,
+                    IsUsed = VerificationCamera1.IsUsed,
+                    Path = VerificationCamera1.Path
+                },
+
+                VerificationCamera2 = new DeviceSettings()
+                {
+                    Name = VerificationCamera2!.Name,
+                    Ip = VerificationCamera2.Ip,
+                    Port = VerificationCamera2.Port,
+                    IsUsed = VerificationCamera2.IsUsed,
+                    Path = VerificationCamera2.Path
                 },
 
                 BoxPrinter = new DeviceSettings()
@@ -157,7 +208,16 @@ public class Settings : Entity, ICloneable
                     Ip = PalletPrinter.Ip,
                     Port = PalletPrinter.Port,
                     IsUsed = PalletPrinter.IsUsed,
-                    Path = BoxPrinter.Path
+                    Path = PalletPrinter.Path
+                },
+
+                TransportPrinter = new DeviceSettings()
+                {
+                    Name = TransportPrinter!.Name,
+                    Ip = TransportPrinter.Ip,
+                    Port = TransportPrinter.Port,
+                    IsUsed = TransportPrinter.IsUsed,
+                    Path = TransportPrinter.Path
                 },
 
                 ServerDb = new DbSettings()
@@ -186,21 +246,31 @@ public class Settings : Entity, ICloneable
             settings.Line.PathSaveReportTaskFiles == Line.PathSaveReportTaskFiles &&
             settings.Line.PathLoadNomenclatureFiles == Line.PathLoadNomenclatureFiles &&
             settings.Line.JobStoragePeriodInDays == Line.JobStoragePeriodInDays &&
-            settings.ProductCameraMaster!.Name == ProductCameraMaster!.Name &&
-            settings.ProductCameraMaster.Ip == ProductCameraMaster.Ip &&
-            settings.ProductCameraMaster.Port == ProductCameraMaster.Port &&
-            settings.ProductCameraMaster.IsUsed == ProductCameraMaster.IsUsed &&
-            settings.ProductCameraMaster.Path == ProductCameraMaster.Path &&
-            settings.ProductCameraSlave!.Name == ProductCameraSlave!.Name &&
-            settings.ProductCameraSlave.Ip == ProductCameraSlave.Ip &&
-            settings.ProductCameraSlave.Port == ProductCameraSlave.Port &&
-            settings.ProductCameraSlave.IsUsed == ProductCameraSlave.IsUsed &&
-            settings.ProductCameraSlave.Path == ProductCameraSlave.Path &&
-            settings.BoxCamera!.Name == BoxCamera!.Name &&
-            settings.BoxCamera.Ip == BoxCamera.Ip &&
-            settings.BoxCamera.Port == BoxCamera.Port &&
-            settings.BoxCamera.IsUsed == BoxCamera.IsUsed &&
-            settings.BoxCamera.Path == BoxCamera.Path &&
+            settings.StatisticCamera!.Name == StatisticCamera!.Name &&
+            settings.StatisticCamera.Ip == StatisticCamera.Ip &&
+            settings.StatisticCamera.Port == StatisticCamera.Port &&
+            settings.StatisticCamera.IsUsed == StatisticCamera.IsUsed &&
+            settings.StatisticCamera.Path == StatisticCamera.Path &&
+            settings.ProductCamera1!.Name == ProductCamera1!.Name &&
+            settings.ProductCamera1.Ip == ProductCamera1.Ip &&
+            settings.ProductCamera1.Port == ProductCamera1.Port &&
+            settings.ProductCamera1.IsUsed == ProductCamera1.IsUsed &&
+            settings.ProductCamera1.Path == ProductCamera1.Path &&
+            settings.ProductCamera2!.Name == ProductCamera2!.Name &&
+            settings.ProductCamera2.Ip == ProductCamera2.Ip &&
+            settings.ProductCamera2.Port == ProductCamera2.Port &&
+            settings.ProductCamera2.IsUsed == ProductCamera2.IsUsed &&
+            settings.ProductCamera2.Path == ProductCamera2.Path &&
+            settings.VerificationCamera1!.Name == VerificationCamera1!.Name &&
+            settings.VerificationCamera1.Ip == VerificationCamera1.Ip &&
+            settings.VerificationCamera1.Port == VerificationCamera1.Port &&
+            settings.VerificationCamera1.IsUsed == VerificationCamera1.IsUsed &&
+            settings.VerificationCamera1.Path == VerificationCamera1.Path &&
+            settings.VerificationCamera2!.Name == VerificationCamera2!.Name &&
+            settings.VerificationCamera2.Ip == VerificationCamera2.Ip &&
+            settings.VerificationCamera2.Port == VerificationCamera2.Port &&
+            settings.VerificationCamera2.IsUsed == VerificationCamera2.IsUsed &&
+            settings.VerificationCamera2.Path == VerificationCamera2.Path &&
             settings.BoxPrinter!.Name == BoxPrinter!.Name &&
             settings.BoxPrinter.Ip == BoxPrinter.Ip &&
             settings.BoxPrinter.Port == BoxPrinter.Port &&
@@ -211,6 +281,11 @@ public class Settings : Entity, ICloneable
             settings.PalletPrinter.Port == PalletPrinter.Port &&
             settings.PalletPrinter.IsUsed == PalletPrinter.IsUsed &&
             settings.PalletPrinter.Path == PalletPrinter.Path &&
+            settings.TransportPrinter!.Name == TransportPrinter!.Name &&
+            settings.TransportPrinter.Ip == TransportPrinter.Ip &&
+            settings.TransportPrinter.Port == TransportPrinter.Port &&
+            settings.TransportPrinter.IsUsed == TransportPrinter.IsUsed &&
+            settings.TransportPrinter.Path == TransportPrinter.Path &&
             settings.ServerDb!.Name == ServerDb!.Name &&
             settings.ServerDb.ServerName == ServerDb.ServerName &&
             settings.ServerDb.DatabaseName == ServerDb.DatabaseName &&
@@ -224,11 +299,22 @@ public class Settings : Entity, ICloneable
 
     protected bool Equals(Settings other)
     {
-        return Equals(_line, other._line) && Equals(_productCameraMaster, other._productCameraMaster) && Equals(_productCameraSlave, other._productCameraSlave) && Equals(_boxCamera, other._boxCamera) && Equals(_boxPrinter, other._boxPrinter) && Equals(_palletPrinter, other._palletPrinter) && Equals(_serverDb, other._serverDb);
+        return Equals(_line, other._line) && Equals(_statisticCamera, other._statisticCamera) && Equals(_productCamera1, other._productCamera1) && Equals(_productCamera2, other._productCamera2) && Equals(_verificationCamera1, other._verificationCamera1) && Equals(_verificationCamera2, other._verificationCamera2) && Equals(_boxPrinter, other._boxPrinter) && Equals(_palletPrinter, other._palletPrinter) && Equals(_transportPrinter, other._transportPrinter) && Equals(_serverDb, other._serverDb);
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(_line, _productCameraMaster, _productCameraSlave, _boxCamera, _boxPrinter, _palletPrinter, _serverDb);
+        var hash = new HashCode();
+        hash.Add(_line);
+        hash.Add(_statisticCamera);
+        hash.Add(_productCamera1);
+        hash.Add(_productCamera2);
+        hash.Add(_verificationCamera1);
+        hash.Add(_verificationCamera2);
+        hash.Add(_boxPrinter);
+        hash.Add(_palletPrinter);
+        hash.Add(_transportPrinter);
+        hash.Add(_serverDb);
+        return hash.ToHashCode();
     }
 }

@@ -99,7 +99,10 @@
                                          PreviewTextInput="TextBox_PreviewTextInput"
                                          PreviewKeyDown="TextBox_PreviewKeyDown"
                                          PreviewKeyUp="TextBox_PreviewKeyUp"
-                                         IsReadOnly="True"/>
+                                         IsReadOnly="{Binding IsCountProductInBoxReadOnly, Mode=TwoWay}"/>
+                                <CheckBox Content="Зафиксировать количество (запретить редактирование)"
+                                          IsChecked="{Binding IsCountProductInBoxReadOnly, Mode=TwoWay}"
+                                          Margin="0,6,0,0"/>
                             </StackPanel>
 
                             <StackPanel>

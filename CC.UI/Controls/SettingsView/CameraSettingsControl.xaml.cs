@@ -1,5 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using Microsoft.WindowsAPICodePack.Dialogs;
+using CC.Data.Entities.Settings;
 
 namespace CC.UI.Controls.SettingsView;
 
@@ -12,6 +14,15 @@ public partial class CameraSettingsControl : UserControl
 
     private void Button_Click(object sender, RoutedEventArgs e)
     {
-        throw new System.NotImplementedException();
+        var dialog = new CommonOpenFileDialog();
+        dialog.IsFolderPicker = true;
+
+        if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+        {
+            if (this.DataContext is DeviceSettings deviceSettings)
+            {
+                deviceSettings.Path = dialog.FileName;
+            }
+        }
     }
 }

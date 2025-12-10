@@ -15,6 +15,7 @@ public class LocalDb
     public ProductDataService ProductDataService { get; set; }
     public BoxDataService BoxDataService { get; set; }
     public PalletDataService PalletDataService { get; set; }
+    public VirtualBoxDataService VirtualBoxDataService { get; set; }
     public LineDataService LineDataService { get; set; }
     public SettingsDataService SettingsDataService { get; set; }
 
@@ -39,6 +40,7 @@ public class LocalDb
         ProductDataService = new ProductDataService(Device.Address);
         BoxDataService = new BoxDataService(Device.Address);
         PalletDataService = new PalletDataService(Device.Address);
+        VirtualBoxDataService = new VirtualBoxDataService(Device.Address);
         LineDataService = new LineDataService(Device.Address);
         SettingsDataService = new SettingsDataService(Device.Address);
 

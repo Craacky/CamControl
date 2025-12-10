@@ -30,6 +30,17 @@ public class LoginViewModel : ViewModel
         }
     }
 
+    private string _errorMessage = string.Empty;
+    public string ErrorMessage
+    {
+        get => _errorMessage;
+        set
+        {
+            _errorMessage = value;
+            OnPropertyChanged(nameof(ErrorMessage));
+        }
+    }
+
     private ICommand _loginCommand;
     public ICommand LoginCommand => _loginCommand;
     private bool CanLoginCommandExecute(object p) => true;
@@ -37,8 +48,22 @@ public class LoginViewModel : ViewModel
     {
         if (Username == "admin" && Password == "admin123")
         {
+            ErrorMessage = string.Empty;
+            Password = string.Empty;
             LoginSucceeded?.Invoke();
         }
+        else
+        {
+            ErrorMessage = "Неверный логин или пароль";
+            Password = string.Empty;
+        }
+    }
+
+    public void ResetCredentials()
+    {
+        Username = string.Empty;
+        Password = string.Empty;
+        ErrorMessage = string.Empty;
     }
 
     public LoginViewModel()

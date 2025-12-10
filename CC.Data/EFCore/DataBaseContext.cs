@@ -26,6 +26,7 @@ public class DataBaseContext : DbContext
     public DbSet<Box> Boxes { get; set; }
     public DbSet<Product> Products { get; set; }
     public DbSet<Pallet> Pallets { get; set; }
+    public DbSet<VirtualBox> VirtualBoxes { get; set; }
     public DbSet<Settings> Settings { get; set; }
 
     public DataBaseContext(string connectionString)
@@ -91,18 +92,29 @@ public class DataBaseContext : DbContext
             .WithOne(p => p.Box)
             .OnDelete(DeleteBehavior.Cascade);
 
+        modelBuilder.Entity<ReportTask>()
+            .HasMany(rt => rt.VirtualBoxes)
+            .WithOne(vb => vb.ReportTask)
+            .OnDelete(DeleteBehavior.Cascade);
+
         modelBuilder.Entity<Settings>()
             .OwnsOne(s => s.Line);
         modelBuilder.Entity<Settings>()
-            .OwnsOne(s => s.ProductCameraMaster);
+            .OwnsOne(s => s.StatisticCamera);
         modelBuilder.Entity<Settings>()
-            .OwnsOne(s => s.ProductCameraSlave);
+            .OwnsOne(s => s.ProductCamera1);
         modelBuilder.Entity<Settings>()
-            .OwnsOne(s => s.BoxCamera);
+            .OwnsOne(s => s.ProductCamera2);
+        modelBuilder.Entity<Settings>()
+            .OwnsOne(s => s.VerificationCamera1);
+        modelBuilder.Entity<Settings>()
+            .OwnsOne(s => s.VerificationCamera2);
         modelBuilder.Entity<Settings>()
             .OwnsOne(s => s.BoxPrinter);
         modelBuilder.Entity<Settings>()
             .OwnsOne(s => s.PalletPrinter);
+        modelBuilder.Entity<Settings>()
+            .OwnsOne(s => s.TransportPrinter);
         modelBuilder.Entity<Settings>()
             .OwnsOne(s => s.ServerDb);
     }

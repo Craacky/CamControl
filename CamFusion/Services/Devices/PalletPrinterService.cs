@@ -22,7 +22,7 @@ public class PalletPrinterService : PrinterDevice
 
     public override void PrintCode()
     {
-        if (Device.IsConnected && _isRun)
+        if (Device.IsUsed && _isRun)
         {
             LoadPatternTask();
             string messageToSend = patternMessage;

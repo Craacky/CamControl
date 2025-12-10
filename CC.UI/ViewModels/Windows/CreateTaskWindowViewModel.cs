@@ -81,6 +81,19 @@ public class CreateTaskWindowViewModel:ViewModel
         public NomenclatureService NomenclatureService { get; set; }
         public ReportTaskService ReportTaskService { get; set; }
 
+        private bool _isCountProductInBoxReadOnly;
+        public bool IsCountProductInBoxReadOnly
+        {
+            get => _isCountProductInBoxReadOnly;
+            set
+            {
+                _isCountProductInBoxReadOnly = value;
+                OnPropertyChanged(nameof(IsCountProductInBoxReadOnly));
+
+                // persist user preference between sessions
+                Application.Current.Properties["IsCountProductInBoxReadOnly"] = value;
+            }
+        }
 
         public CreateTaskWindowViewModel(NomenclatureService nomenclatureService,
                                                ReportTaskService? reportTaskService)
@@ -92,6 +105,16 @@ public class CreateTaskWindowViewModel:ViewModel
             ReportTask.ManufactureDate = DateTime.Now.Date.AddDays(1);
             ReportTask.CountProductInBox = "12";
 
+            if (Application.Current.Properties.Contains("IsCountProductInBoxReadOnly") &&
+                Application.Current.Properties["IsCountProductInBoxReadOnly"] is bool savedReadonly)
+            {
+                IsCountProductInBoxReadOnly = savedReadonly;
+            }
+            else
+            {
+                IsCountProductInBoxReadOnly = false;
+            }
+
             closeWindowCommand = new RelayCommand(OnCloseWindowCommandExecuted, CanCloseWindowCommandExecute);
             createTaskCommand = new RelayCommand(OnCreateTaskCommandExecuted, CanCreateTaskCommandExecute);
         }
@@ -102,6 +125,16 @@ public class CreateTaskWindowViewModel:ViewModel
             ReportTask = new ReportTask();
             ReportTask.ManufactureDate = DateTime.Now.Date;
             ReportTask.CountProductInBox = "12";
+
+            if (Application.Current.Properties.Contains("IsCountProductInBoxReadOnly") &&
+                Application.Current.Properties["IsCountProductInBoxReadOnly"] is bool savedReadonly)
+            {
+                IsCountProductInBoxReadOnly = savedReadonly;
+            }
+            else
+            {
+                IsCountProductInBoxReadOnly = false;
+            }
             SelectedNomenclature = SelectedNomenclature;
         }
 }

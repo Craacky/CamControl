@@ -1,5 +1,7 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
 using CC.Core.Commands.Base;
 using CC.Core.Services;
 using CC.Core.Services.Impl;
