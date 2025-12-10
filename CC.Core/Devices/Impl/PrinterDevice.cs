@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Data;
+using System.Threading.Tasks;
 using CC.Core.Models;
 using CC.Core.Services.Impl;
 using CC.Data.Entities.Settings;
 using SocketManager;
 
 namespace CC.Core.Devices.Impl;
+
+using System.Net.Sockets;
+using System.Text;
 
 public class PrinterDevice : IPrinterDevice
 {
@@ -106,25 +110,50 @@ public class PrinterDevice : IPrinterDevice
 
     public void Start()
     {
-        if (_client.IsConnected)
+        if (Device.IsUsed)
         {
             _isRun = true;
-
-            LoadTemplates();
+            // Don't necessarily load templates immediately, do it on demand
         }
     }
 
     public void Stop()
     {
-        if (Device.IsConnected && _isRun)
+        if (_isRun)
         {
             _isRun = false;
+            // Optionally disconnect when stopping
+            _client.Disconnect();
+        }
+    }
+
+    protected void SendMessageInternal(string message)
+    {
+        if (Device.IsUsed)
+        {
+            _client.SendMessageAsync(message);
         }
     }
 
     public void SendMessage(string message)
     {
-        if (Device.IsConnected && _isRun)
+        // For printers, we may send messages even without a persistent connection
+        // Connect temporarily, send message, then allow the connection to close
+        if (!_client.IsConnected)
+        {
+            _client.ConnectAsync(); // Attempt to connect temporarily
+            // Send message after a brief delay to allow connection
+            Task.Delay(100).ContinueWith(_ => {
+                if (_client.IsConnected || Device.IsUsed) // Allow sending even if not fully connected
+                {
+                    _client.SendMessageAsync(message);
+
+                    // Optionally disconnect after sending if needed
+                    // Task.Delay(500).ContinueWith(t => _client.Disconnect());
+                }
+            });
+        }
+        else
         {
             _client.SendMessageAsync(message);
         }
@@ -178,6 +207,28 @@ public class PrinterDevice : IPrinterDevice
 
     public virtual void PrintCode()
     {
+        // Connect temporarily for printing, send the print command, then allow disconnection
+        if (Device.IsUsed)
+        {
+            _client.ConnectAsync();
+            // Wait briefly for connection establishment
+            Task.Delay(100).ContinueWith(_ => {
+                if (_client.IsConnected)
+                {
+                    // Actually load templates and print
+                    LoadTemplates();
+                    string messageToSend = patternMessage;
+                    _ = _client.SendMessageAsync(messageToSend);
+                }
+                else
+                {
+                    // Even if not fully connected, try to send command
+                    LoadTemplates();
+                    string messageToSend = patternMessage;
+                    _ = _client.SendMessageAsync(messageToSend);
+                }
+            });
+        }
     }
 
     public virtual void RepeatePrinteCode()

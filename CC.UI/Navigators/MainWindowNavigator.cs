@@ -86,6 +86,7 @@ public enum MainWindowViewType
                     case MainWindowViewType.SettingsView:
                         if (!IsSettingsAuthorized)
                         {
+                            LoginViewModel.ResetCredentials();
                             CurrentViewModel = LoginViewModel;
                         }
                         else

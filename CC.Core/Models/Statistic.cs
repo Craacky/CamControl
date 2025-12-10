@@ -48,6 +48,18 @@ public class Statistic : ObservableObject
         }
     }
 
+    private int _statisticsCounter;
+
+    public int StatisticsCounter
+    {
+        get => _statisticsCounter;
+        set
+        {
+            _statisticsCounter = value;
+            OnPropertyChanged(nameof(StatisticsCounter));
+        }
+    }
+
     private int _countBoxes;
 
     public int CountBoxes

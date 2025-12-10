@@ -141,6 +141,8 @@ public class ReportTask : Entity
     public int? NomenclatureId { get; set; }
     public virtual Nomenclature? Nomenclature { get; set; }
 
+    public virtual List<VirtualBox> VirtualBoxes { get; set; } = new List<VirtualBox>();
+
     [NotMapped] private int _expiryDateInDays;
 
     [NotMapped]

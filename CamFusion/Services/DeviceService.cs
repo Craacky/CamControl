@@ -1,9 +1,10 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 using CamFusion.Services.Devices;
 using CC.Core.Devices.Impl;
 using CC.Core.Models;
@@ -24,6 +25,33 @@ public class DeviceService : DeviceServiceBase
         ProcessingCodeService processingCodeService) : base(settingsService, reportTaskService, localDbService,
         processingCodeService)
     {
+        VirtualBoxService = new VirtualBoxService(localDbService, reportTaskService, processingCodeService);
+        SettingsService.SettingsChanged += SettingsService_SettingsChanged;
+    }
+
+    public new void StartDevices()
+    {
+        if (ReportTaskService?.CurrentReportTask == null || VirtualBoxService == null)
+        {
+            // нет активного задания — не запускаем устройства, чтобы избежать NRE
+            return;
+        }
+
+        base.StartDevices();
+        VirtualBoxService.StartTimeoutWatcher(TimeSpan.FromMinutes(10), TimeSpan.FromMinutes(1));
+    }
+
+    public new void StopDevices()
+    {
+        VirtualBoxService?.StopTimeoutWatcher();
+        base.StopDevices();
+    }
+
+    private void SettingsService_SettingsChanged()
+    {
+        // When settings change, disconnect current devices and recreate them
+        DisconnectDevices();
+        CreateDevice();
     }
 
 
@@ -32,11 +60,14 @@ public class DeviceService : DeviceServiceBase
         StopDevices();
         DisconnectDevices();
 
-        ProductMasterCameraService = null!;
-        ProductSlaveCameraService = null!;
-        BoxCameraService = null!;
+        StatisticCameraService = null!;
+        ProductCamera1Service = null!;
+        ProductCamera2Service = null!;
+        VerificationCamera1Service = null!;
+        VerificationCamera2Service = null!;
         BoxPrinterService = null!;
         PalletPrinterService = null!;
+        TransportPrinterService = null!;
 
         Devices = new ObservableCollection<Device>();
 
@@ -46,53 +77,77 @@ public class DeviceService : DeviceServiceBase
             LocalDbService.ConnectionChanged += LocalDBService_ConnectionChanged;
         }
 
-        if (SettingsService.Settings.ProductCameraMaster != null)
+        if (SettingsService.Settings.StatisticCamera != null)
         {
             if (SettingsService.Settings.Line != null)
-                ProductMasterCameraService = new ProductMasterCameraService(
-                    SettingsService.Settings.ProductCameraMaster,
+                StatisticCameraService = new GeneralCameraService(
+                    SettingsService.Settings.StatisticCamera,
                     SettingsService.Settings.Line);
-            if (SettingsService.Settings.ProductCameraMaster.IsUsed)
+            if (SettingsService.Settings.StatisticCamera.IsUsed)
             {
-                Devices.Add(ProductMasterCameraService.Device);
-                ((ProductMasterCameraService)ProductMasterCameraService).ConnectionChanged +=
+                Devices.Add(StatisticCameraService.Device);
+                ((GeneralCameraService)StatisticCameraService).ConnectionChanged +=
                     CameraService_ConnectionChanged;
-                ((ProductMasterCameraService)ProductMasterCameraService).MessageReceived +=
-                    ProductMasterCameraService_MessageReceived;
+                ((GeneralCameraService)StatisticCameraService).MessageReceived +=
+                    StatisticCameraService_MessageReceived;
             }
         }
 
         if (SettingsService.Settings.Line != null)
         {
-            if (SettingsService.Settings.ProductCameraSlave != null)
+            if (SettingsService.Settings.ProductCamera1 != null)
             {
-                ProductSlaveCameraService = new ProductSlaveCameraService(SettingsService.Settings.ProductCameraSlave,
+                ProductCamera1Service = new GeneralCameraService(SettingsService.Settings.ProductCamera1,
                     SettingsService.Settings.Line);
-                if (SettingsService.Settings.ProductCameraSlave.IsUsed)
+                if (SettingsService.Settings.ProductCamera1.IsUsed)
                 {
-                    Devices.Add(ProductSlaveCameraService.Device);
-                    ((ProductSlaveCameraService)ProductSlaveCameraService).ConnectionChanged +=
+                    Devices.Add(ProductCamera1Service.Device);
+                    ((GeneralCameraService)ProductCamera1Service).ConnectionChanged +=
                         CameraService_ConnectionChanged;
-                    ((ProductSlaveCameraService)ProductSlaveCameraService).MessageReceived +=
-                        ProductSlaveCameraService_MessageReceived;
+                    ((GeneralCameraService)ProductCamera1Service).MessageReceived +=
+                        ProductCamera1Service_MessageReceived;
                 }
             }
 
-            if (SettingsService.Settings.BoxCamera != null)
+            if (SettingsService.Settings.ProductCamera2 != null)
             {
-                BoxCameraService = new BoxCameraService(SettingsService.Settings.BoxCamera,
+                ProductCamera2Service = new GeneralCameraService(SettingsService.Settings.ProductCamera2,
                     SettingsService.Settings.Line);
-                if (SettingsService.Settings.BoxCamera.IsUsed)
+                if (SettingsService.Settings.ProductCamera2.IsUsed)
                 {
-                    Devices.Add(BoxCameraService.Device);
-                    ((BoxCameraService)BoxCameraService).ConnectionChanged += CameraService_ConnectionChanged;
-                    ((BoxCameraService)BoxCameraService).MessageReceived += BoxCameraService_MessageReceived;
+                    Devices.Add(ProductCamera2Service.Device);
+                    ((GeneralCameraService)ProductCamera2Service).ConnectionChanged += CameraService_ConnectionChanged;
+                    ((GeneralCameraService)ProductCamera2Service).MessageReceived += ProductCamera2Service_MessageReceived;
                 }
             }
 
-            if (SettingsService.Settings.PalletPrinter != null)
+            if (SettingsService.Settings.VerificationCamera1 != null)
             {
-                BoxPrinterService = new BoxPrinterService(SettingsService.Settings.PalletPrinter,
+                VerificationCamera1Service = new GeneralCameraService(SettingsService.Settings.VerificationCamera1,
+                    SettingsService.Settings.Line);
+                if (SettingsService.Settings.VerificationCamera1.IsUsed)
+                {
+                    Devices.Add(VerificationCamera1Service.Device);
+                    ((GeneralCameraService)VerificationCamera1Service).ConnectionChanged += CameraService_ConnectionChanged;
+                    ((GeneralCameraService)VerificationCamera1Service).MessageReceived += VerificationCamera1Service_MessageReceived;
+                }
+            }
+
+            if (SettingsService.Settings.VerificationCamera2 != null)
+            {
+                VerificationCamera2Service = new GeneralCameraService(SettingsService.Settings.VerificationCamera2,
+                    SettingsService.Settings.Line);
+                if (SettingsService.Settings.VerificationCamera2.IsUsed)
+                {
+                    Devices.Add(VerificationCamera2Service.Device);
+                    ((GeneralCameraService)VerificationCamera2Service).ConnectionChanged += CameraService_ConnectionChanged;
+                    ((GeneralCameraService)VerificationCamera2Service).MessageReceived += VerificationCamera2Service_MessageReceived;
+                }
+            }
+
+            if (SettingsService.Settings.BoxPrinter != null)
+            {
+                BoxPrinterService = new BoxPrinterService(SettingsService.Settings.BoxPrinter,
                     SettingsService.Settings.Line,
                     LocalDbService,
                     ReportTaskService);
@@ -101,8 +156,19 @@ public class DeviceService : DeviceServiceBase
                     Devices.Add(BoxPrinterService.Device);
                     ((BoxPrinterService)BoxPrinterService).ConnectionChanged += PrinterDeviceService_ConnectionChanged;
                 }
+            }
 
+            if (SettingsService.Settings.PalletPrinter != null)
+            {
                 PalletPrinterService = new PalletPrinterService(SettingsService.Settings.PalletPrinter,
+                    SettingsService.Settings.Line,
+                    LocalDbService,
+                    ReportTaskService);
+            }
+
+            if (SettingsService.Settings.TransportPrinter != null)
+            {
+                TransportPrinterService = new TransportPrinterService(SettingsService.Settings.TransportPrinter,
                     SettingsService.Settings.Line,
                     LocalDbService,
                     ReportTaskService);
@@ -115,239 +181,304 @@ public class DeviceService : DeviceServiceBase
             ((PalletPrinterService)PalletPrinterService).ConnectionChanged += PrinterDeviceService_ConnectionChanged;
         }
 
+        if (SettingsService.Settings.TransportPrinter != null && SettingsService.Settings.TransportPrinter.IsUsed)
+        {
+            Devices.Add(TransportPrinterService.Device);
+            ((TransportPrinterService)TransportPrinterService).ConnectionChanged += PrinterDeviceService_ConnectionChanged;
+        }
+
         ConnectDevices();
         FindedDevice();
     }
 
-    private void BoxCameraService_MessageReceived(Client client, DateTime datetime, string message)
-    {
-    }
-
-    private void ProductSlaveCameraService_MessageReceived(Client client, DateTime datetime, string message)
-    {
-    }
-
-    private void ProductMasterCameraService_MessageReceived(Client client, DateTime datetime, string message)
+    private void StatisticCameraService_MessageReceived(Client client, DateTime datetime, string message)
     {
         Task.Run(() =>
         {
-            string startPattern = "<start>";
-            string stopPattern = "<stop>";
-            string failPattern = "fail";
-            string nextPattern = "<next>";
+            if (ReportTaskService.CurrentReportTask == null)
+                return;
 
-            bool isCorrectMessage = message.Contains(startPattern) && message.Contains(stopPattern);
-            if (isCorrectMessage)
+            var code = ParseCodeFromMessage(message);
+            if (string.IsNullOrEmpty(code))
+                return;
+
+            if (!ProcessingCodeService.IsProductCode(code))
+                return;
+
+            if (!ProcessingCodeService.IsProductCodeTheCurrentTask(code))
+                return;
+
+            ReportTaskService.Statistic.StatisticsCounter++;
+            ReportTaskService.Statistic.CameraReadingResults.Insert(0, new CameraReadingResult()
             {
-                string[] batches = message.Split(startPattern, StringSplitOptions.RemoveEmptyEntries);
-                foreach (string batch in batches)
-                {
-                    if (batch.Contains(stopPattern))
-                    {
-                        string part = batch.Split(stopPattern)[0];
-
-                        bool isFaiLMessage = part.Contains(failPattern);
-                        if (isFaiLMessage)
-                        {
-                            string[] decodeResults = part.Split(nextPattern);
-
-                            if (Convert.ToInt32(decodeResults[1]) == 1)
-                            {
-                                ReportTaskService.Statistic.CameraReadingResults.Insert(0, new CameraReadingResult());
-
-                                ReportTaskService.Statistic.CameraReadingResults[0].BoxCameraReadingResult = "Считано";
-
-                                ReportTaskService.Statistic.CameraReadingResults[0].ProductCameraMasterReadingResult =
-                                    Convert.ToInt32(decodeResults[2]) ==
-                                    Convert.ToInt32(ReportTaskService.CurrentReportTask.CountProductInBox) / 2
-                                        ? "Считано"
-                                        : "Несчитано";
-                                ReportTaskService.Statistic.CameraReadingResults[0].ProductCameraSlaveReadingResult =
-                                    Convert.ToInt32(decodeResults[3].Split(stopPattern)[0]) ==
-                                    Convert.ToInt32(ReportTaskService.CurrentReportTask.CountProductInBox) / 2
-                                        ? "Считано"
-                                        : "Несчитано";
-                            }
-                            else
-                            {
-                                ReportTaskService.Statistic.CameraReadingResults.Insert(0,
-                                    new CameraReadingResult() { BoxCameraReadingResult = "Несчитано" });
-                            }
-
-                            return;
-                        }
-
-
-                        string[] markingCodes = part.Split(nextPattern);
-
-                        if (ReportTaskService.Statistic.PalletCodes.Count == 0 ||
-                            ReportTaskService.Statistic.PalletCodes[^1].IsFulled)
-                        {
-                            ReportTaskService.GeneratePalletCode();
-                        }
-
-                        if (SettingsService.Settings.Line != null)
-                        {
-                            Box? newBox = new Box
-                            {
-                                LineId = SettingsService.Settings.Line.LineId,
-                                MarkingCode = markingCodes[0],
-                                ReportTaskGuid = ReportTaskService.CurrentReportTask.Guid,
-                                PalletId = ReportTaskService.Statistic.PalletCodes[^1].Id
-                            };
-
-
-                            bool isBoxCodeTheCurrentTask =
-                                ProcessingCodeService.IsBoxCodeTheCurrentTask(markingCodes[0]);
-                            if (!isBoxCodeTheCurrentTask)
-                            {
-                                LostedDevice();
-                                StopDevices();
-
-                                MessageBox.Show(
-                                    "Код короба не соответствует коду короба текущего задания.\n" +
-                                    $"{markingCodes[0]}\n" +
-                                    "Короб не будет добавлен.\n" +
-                                    "Уберите с паллеты последний прошедший короб!!!", "Ошибка", MessageBoxButton.OK);
-
-                                ReportTaskService.Statistic.CameraReadingResults.Insert(0,
-                                    new CameraReadingResult()
-                                        { BoxCameraReadingResult = $"Несоответсвие кода {markingCodes[0]}" });
-
-                                FindedDevice();
-                                StartDevices();
-
-                                return;
-                            }
-
-                            bool isRepeateBoxCode = ProcessingCodeService.IsRepeatBoxCode(markingCodes[0]);
-                            if (isRepeateBoxCode)
-                            {
-                                LostedDevice();
-                                StopDevices();
-
-                                MessageBox.Show("Повтор кода короба.\n" +
-                                                $"{markingCodes[0]}\n" +
-                                                "Короб не будет добавлен.\n" +
-                                                "Уберите с паллеты последний прошедший короб!!!",
-                                    "Ошибка", MessageBoxButton.OK);
-
-
-                                ReportTaskService.Statistic.CameraReadingResults.Insert(0,
-                                    new CameraReadingResult()
-                                        { BoxCameraReadingResult = $"Повтор кода {markingCodes[0]}" });
-
-                                FindedDevice();
-                                StartDevices();
-
-                                return;
-                            }
-
-                            List<Product> products = new List<Product>();
-
-                            for (int i = 1; i < markingCodes.Length; i++)
-                            {
-                                Product newProduct = new()
-                                {
-                                    MarkingCode = markingCodes[i],
-                                    BoxId = newBox.Id,
-                                    LineId = SettingsService.Settings.Line.LineId,
-                                    ReportTaskGuid = ReportTaskService.CurrentReportTask.Guid
-                                };
-
-                                bool isProductCodeTheCurrentTask =
-                                    ProcessingCodeService.IsProductCodeTheCurrentTask(markingCodes[i]);
-                                if (!isProductCodeTheCurrentTask)
-                                {
-                                    LostedDevice();
-                                    StopDevices();
-
-                                    MessageBox.Show(
-                                        "Код продукта не соответствует коду продукта текущего задания.\n" +
-                                        $"{markingCodes[i]}\n" +
-                                        "Короб не будет добавлен.\n" +
-                                        "Уберите с паллеты последний прошедший короб!!!", "Ошибка",
-                                        MessageBoxButton.OK);
-
-                                    ReportTaskService.Statistic.CameraReadingResults.Insert(0,
-                                        new CameraReadingResult()
-                                        {
-                                            BoxCameraReadingResult = $"Считано {newBox.MarkingCode}",
-                                            ProductCameraMasterReadingResult = $"Несоответствие кода {markingCodes[i]}"
-                                        });
-
-                                    StartDevices();
-                                    FindedDevice();
-
-                                    return;
-                                }
-
-                                bool isRepeatProductCode = ProcessingCodeService.IsRepeatProductCode(markingCodes[i]);
-                                bool isRepeatInCurrentBox = products.Any(p =>
-                                    p.MarkingCode?.Replace("\u001d", "") == markingCodes[i].Replace("\u001d", ""));
-                                if (isRepeatProductCode || isRepeatInCurrentBox)
-                                {
-                                    LostedDevice();
-                                    StopDevices();
-
-                                    MessageBox.Show("Повтор кода продукта.\n" +
-                                                    $"{markingCodes[i]}\n" +
-                                                    "Короб не будет добавлен.\n" +
-                                                    "Уберите с паллеты последний прошедший короб!!!",
-                                        "Ошибка", MessageBoxButton.OK);
-
-                                    ReportTaskService.Statistic.CameraReadingResults.Insert(0,
-                                        new CameraReadingResult()
-                                        {
-                                            BoxCameraReadingResult = $"Считано {newBox.MarkingCode}",
-                                            ProductCameraMasterReadingResult = $"Повтор кода {markingCodes[i]}"
-                                        });
-
-                                    StartDevices();
-                                    FindedDevice();
-
-                                    return;
-                                }
-
-                                products.Add(newProduct);
-                            }
-
-                            newBox = LocalDbService.BoxDataService.Create(newBox);
-
-                            for (int i = 0; i < products.Count; i++)
-                            {
-                                products[i].BoxId = newBox?.Id;
-                                var newProduct = LocalDbService.ProductDataService.Create(products[i]);
-                                ReportTaskService.Statistic.ProductCodes.Add(newProduct!);
-                            }
-
-                            ReportTaskService.Statistic.CountProducts += products.Count;
-                            if (newBox != null)
-                            {
-                                ReportTaskService.Statistic.BoxCodes.Add(newBox);
-                                ReportTaskService.Statistic.CountBoxes++;
-                                ReportTaskService.Statistic.CountBoxInCurrentPallet++;
-
-
-                                ReportTaskService.Statistic.CameraReadingResults.Insert(0,
-                                    new CameraReadingResult()
-                                    {
-                                        BoxCameraReadingResult = $"Считано {newBox.MarkingCode}",
-                                        ProductCameraMasterReadingResult = "Cчитано",
-                                        ProductCameraSlaveReadingResult = "Cчитано"
-                                    });
-                            }
-                        }
-
-                        if (ReportTaskService.Statistic.CountBoxInCurrentPallet % countBoxInPallet == 0)
-                        {
-                            ReportTaskService.ClosePallet();
-                            PalletPrinterService?.PrintCode();
-                        }
-                    }
-                }
-            }
+                StatisticCameraReadingResult = "Считано",
+                ProductCamera1ReadingResult = "Ожидание",
+                ProductCamera2ReadingResult = "Ожидание",
+                VerificationCamera1ReadingResult = "Ожидание",
+                VerificationCamera2ReadingResult = "Ожидание"
+            });
         });
+    }
+
+    private void ProductCamera1Service_MessageReceived(Client client, DateTime datetime, string message)
+    {
+        Task.Run(() =>
+        {
+            ProcessFormationCameraMessage(message, "Camera1");
+        });
+    }
+
+    private void ProductCamera2Service_MessageReceived(Client client, DateTime datetime, string message)
+    {
+        Task.Run(() =>
+        {
+            ProcessFormationCameraMessage(message, "Camera2");
+        });
+    }
+
+    private void ProcessFormationCameraMessage(string message, string cameraName)
+    {
+        if (ReportTaskService.CurrentReportTask == null)
+            return;
+
+        var codes = ParseCodesFromMessage(message);
+        if (codes == null || codes.Count == 0)
+            return;
+
+        var expectedCount = Convert.ToInt32(ReportTaskService.CurrentReportTask.CountProductInBox);
+        if (codes.Count != expectedCount)
+        {
+            ReportTaskService.Statistic.CameraReadingResults.Insert(0, new CameraReadingResult()
+            {
+                StatisticCameraReadingResult = "Ожидание",
+                ProductCamera1ReadingResult = cameraName == "Camera1" ? $"Ошибка: получено {codes.Count}, ожидалось {expectedCount}" : "Ожидание",
+                ProductCamera2ReadingResult = cameraName == "Camera2" ? $"Ошибка: получено {codes.Count}, ожидалось {expectedCount}" : "Ожидание",
+                VerificationCamera1ReadingResult = "Ожидание",
+                VerificationCamera2ReadingResult = "Ожидание"
+            });
+            return;
+        }
+
+        // дубликаты внутри пакета
+        if (codes.Count != codes.Distinct().Count())
+        {
+            ReportTaskService.Statistic.CameraReadingResults.Insert(0, new CameraReadingResult()
+            {
+                StatisticCameraReadingResult = "Ожидание",
+                ProductCamera1ReadingResult = cameraName == "Camera1" ? "Ошибка: дубликаты в пакете" : "Ожидание",
+                ProductCamera2ReadingResult = cameraName == "Camera2" ? "Ошибка: дубликаты в пакете" : "Ожидание",
+                VerificationCamera1ReadingResult = "Ожидание",
+                VerificationCamera2ReadingResult = "Ожидание"
+            });
+            return;
+        }
+
+        var validCodes = new List<string>();
+        foreach (var code in codes)
+        {
+            if (!ProcessingCodeService.IsProductCode(code))
+            {
+                validCodes.Clear();
+                break;
+            }
+
+            if (!ProcessingCodeService.IsProductCodeTheCurrentTask(code))
+            {
+                validCodes.Clear();
+                break;
+            }
+
+            if (ProcessingCodeService.IsRepeatProductCode(code))
+            {
+                validCodes.Clear();
+                break;
+            }
+
+            validCodes.Add(code);
+        }
+
+        if (validCodes.Count != expectedCount)
+        {
+            ReportTaskService.Statistic.CameraReadingResults.Insert(0, new CameraReadingResult()
+            {
+                StatisticCameraReadingResult = "Ожидание",
+                ProductCamera1ReadingResult = cameraName == "Camera1" ? $"Ошибка: валидных кодов {validCodes.Count}, ожидалось {expectedCount}" : "Ожидание",
+                ProductCamera2ReadingResult = cameraName == "Camera2" ? $"Ошибка: валидных кодов {validCodes.Count}, ожидалось {expectedCount}" : "Ожидание",
+                VerificationCamera1ReadingResult = "Ожидание",
+                VerificationCamera2ReadingResult = "Ожидание"
+            });
+            return;
+        }
+
+        try
+        {
+            var virtualBox = VirtualBoxService.CreateVirtualBox(
+                ReportTaskService.CurrentReportTask.Guid,
+                ReportTaskService.CurrentReportTask.Id,
+                validCodes);
+
+            ReportTaskService.Statistic.CameraReadingResults.Insert(0, new CameraReadingResult()
+            {
+                StatisticCameraReadingResult = "Ожидание",
+                ProductCamera1ReadingResult = cameraName == "Camera1" ? "Виртуальный короб создан" : "Ожидание",
+                ProductCamera2ReadingResult = cameraName == "Camera2" ? "Виртуальный короб создан" : "Ожидание",
+                VerificationCamera1ReadingResult = "Ожидание",
+                VerificationCamera2ReadingResult = "Ожидание"
+            });
+        }
+        catch (Exception ex)
+        {
+            ReportTaskService.Statistic.CameraReadingResults.Insert(0, new CameraReadingResult()
+            {
+                StatisticCameraReadingResult = "Ожидание",
+                ProductCamera1ReadingResult = cameraName == "Camera1" ? $"Ошибка: {ex.Message}" : "Ожидание",
+                ProductCamera2ReadingResult = cameraName == "Camera2" ? $"Ошибка: {ex.Message}" : "Ожидание",
+                VerificationCamera1ReadingResult = "Ожидание",
+                VerificationCamera2ReadingResult = "Ожидание"
+            });
+        }
+    }
+
+    private void VerificationCamera1Service_MessageReceived(Client client, DateTime datetime, string message)
+    {
+        Task.Run(async () =>
+        {
+            await ProcessVerificationCameraMessage(message, "Camera1");
+        });
+    }
+
+    private void VerificationCamera2Service_MessageReceived(Client client, DateTime datetime, string message)
+    {
+        Task.Run(async () =>
+        {
+            await ProcessVerificationCameraMessage(message, "Camera2");
+        });
+    }
+
+    private async Task ProcessVerificationCameraMessage(string message, string cameraName)
+    {
+        if (ReportTaskService.CurrentReportTask == null)
+            return;
+
+        var codes = ParseCodesFromMessage(message);
+        if (codes == null || codes.Count != 2)
+        {
+            ReportTaskService.Statistic.CameraReadingResults.Insert(0, new CameraReadingResult()
+            {
+                StatisticCameraReadingResult = "Ожидание",
+                ProductCamera1ReadingResult = "Ожидание",
+                ProductCamera2ReadingResult = "Ожидание",
+                VerificationCamera1ReadingResult = cameraName == "Camera1" ? $"Ошибка: получено {codes?.Count ?? 0} кодов, ожидалось 2" : "Ожидание",
+                VerificationCamera2ReadingResult = cameraName == "Camera2" ? $"Ошибка: получено {codes?.Count ?? 0} кодов, ожидалось 2" : "Ожидание"
+            });
+            return;
+        }
+
+        var boxLabelCode = codes[0];
+        var productCode = codes[1];
+
+        var isValid = await VirtualBoxService.VerifyBoxAsync(boxLabelCode, productCode);
+        if (!isValid)
+        {
+            ReportTaskService.Statistic.CameraReadingResults.Insert(0, new CameraReadingResult()
+            {
+                StatisticCameraReadingResult = "Ожидание",
+                ProductCamera1ReadingResult = "Ожидание",
+                ProductCamera2ReadingResult = "Ожидание",
+                VerificationCamera1ReadingResult = cameraName == "Camera1" ? "Ошибка верификации" : "Ожидание",
+                VerificationCamera2ReadingResult = cameraName == "Camera2" ? "Ошибка верификации" : "Ожидание"
+            });
+            return;
+        }
+
+        var virtualBox = VirtualBoxService.FindVirtualBoxByLabelCode(boxLabelCode);
+        if (virtualBox == null)
+        {
+            return;
+        }
+
+        if (virtualBox.Status == VirtualBoxStatus.Verified)
+        {
+            ReportTaskService.Statistic.CameraReadingResults.Insert(0, new CameraReadingResult()
+            {
+                StatisticCameraReadingResult = "Ожидание",
+                ProductCamera1ReadingResult = "Ожидание",
+                ProductCamera2ReadingResult = "Ожидание",
+                VerificationCamera1ReadingResult = cameraName == "Camera1" ? "Уже верифицирован" : "Ожидание",
+                VerificationCamera2ReadingResult = cameraName == "Camera2" ? "Уже верифицирован" : "Ожидание"
+            });
+            return;
+        }
+
+        var currentPallet = ReportTaskService.Statistic.PalletCodes.LastOrDefault();
+        if (currentPallet == null || currentPallet.IsFulled)
+        {
+            ReportTaskService.GeneratePalletCode();
+            currentPallet = ReportTaskService.Statistic.PalletCodes.LastOrDefault();
+        }
+
+        if (currentPallet == null)
+        {
+            return;
+        }
+
+        var box = await VirtualBoxService.ConvertToRealBoxAsync(virtualBox, currentPallet.Id);
+        
+        ReportTaskService.Statistic.BoxCodes.Add(box);
+        ReportTaskService.Statistic.CountBoxes++;
+        currentPallet.Boxes.Add(box);
+
+        foreach (var product in box.Products)
+        {
+            ReportTaskService.Statistic.ProductCodes.Add(product);
+            ReportTaskService.Statistic.CountProducts++;
+        }
+
+        ReportTaskService.Statistic.CountBoxInCurrentPallet = currentPallet.Boxes.Count;
+
+        ReportTaskService.Statistic.CameraReadingResults.Insert(0, new CameraReadingResult()
+        {
+            StatisticCameraReadingResult = "Ожидание",
+            ProductCamera1ReadingResult = "Ожидание",
+            ProductCamera2ReadingResult = "Ожидание",
+            VerificationCamera1ReadingResult = cameraName == "Camera1" ? "Короб верифицирован" : "Ожидание",
+            VerificationCamera2ReadingResult = cameraName == "Camera2" ? "Короб верифицирован" : "Ожидание"
+        });
+    }
+
+    private string ParseCodeFromMessage(string message)
+    {
+        if (string.IsNullOrWhiteSpace(message))
+            return string.Empty;
+
+        var code = message.Trim();
+        code = code.Replace("\0", "");
+        code = code.Replace("\r", "");
+        code = code.Replace("\n", "");
+        code = code.Replace("<GS>", "\u001d");
+        code = code.Replace(",gs.", "\u001d");
+
+        return code;
+    }
+
+    private List<string> ParseCodesFromMessage(string message)
+    {
+        if (string.IsNullOrWhiteSpace(message))
+            return new List<string>();
+
+        var codes = new List<string>();
+        var lines = message.Split(new[] { "\r\n", "\n", "\r", " " }, StringSplitOptions.RemoveEmptyEntries);
+
+        foreach (var line in lines)
+        {
+            var code = ParseCodeFromMessage(line);
+            if (!string.IsNullOrEmpty(code))
+            {
+                codes.Add(code);
+            }
+        }
+
+        return codes;
     }
 
     private void LocalDBService_ConnectionChanged(DataBaseContext db, DateTime datetime,

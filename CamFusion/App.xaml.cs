@@ -11,6 +11,7 @@ using CC.UI.Navigators;
 using CC.UI.ViewModels.MainWindow;
 using CC.UI.ViewModels.Windows;
 using CC.UI.Views.Windows;
+using System.Windows.Threading;
 
 namespace CamFusion;
 
@@ -52,6 +53,10 @@ public partial class App
     {
         try
         {
+            // Глобальный перехват необработанных исключений для диагностики
+            DispatcherUnhandledException += App_DispatcherUnhandledException;
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+
 
             // Settings.LocalDb = new DbSettings()
             // {
@@ -73,6 +78,13 @@ public partial class App
 
             NomenclatureService = new NomenclatureService(LocalDbService);
             NomenclatureService.StartLodingNomenclatureAsync(SettingsService.Settings.Line.PathLoadNomenclatureFiles);
+
+            SettingsService.SettingsChanged += () =>
+            {
+                // Restart nomenclature watcher when path changes in settings
+                NomenclatureService.StopLoadingNomenclatures();
+                NomenclatureService.StartLodingNomenclatureAsync(SettingsService.Settings.Line.PathLoadNomenclatureFiles);
+            };
 
             if (SettingsService.Settings != null)
                 ReportTaskService = new ReportTaskService(LocalDbService,
@@ -143,7 +155,21 @@ public partial class App
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message);
+            MessageBox.Show($"{ex.Message}\n\n{ex}", "Startup error");
+        }
+    }
+
+    private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+    {
+        MessageBox.Show($"{e.Exception.Message}\n\n{e.Exception}", "Unhandled UI exception");
+        e.Handled = true;
+    }
+
+    private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+    {
+        if (e.ExceptionObject is Exception ex)
+        {
+            MessageBox.Show($"{ex.Message}\n\n{ex}", "Unhandled domain exception");
         }
     }
 

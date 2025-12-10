@@ -8,11 +8,14 @@ namespace CC.Core.Services;
 
 public interface IDeviceService
 {
-    ICameraDevice ProductMasterCameraService { get; set; }
-    ICameraDevice ProductSlaveCameraService { get; set; }
-    ICameraDevice BoxCameraService { get; set; }
+    ICameraDevice StatisticCameraService { get; set; }
+    ICameraDevice ProductCamera1Service { get; set; }
+    ICameraDevice ProductCamera2Service { get; set; }
+    ICameraDevice VerificationCamera1Service { get; set; }
+    ICameraDevice VerificationCamera2Service { get; set; }
     IPrinterDevice BoxPrinterService { get; set; }
     IPrinterDevice PalletPrinterService { get; set; }
+    IPrinterDevice TransportPrinterService { get; set; }
 
 
     ObservableCollection<Device> Devices { get; set; }
@@ -22,6 +25,7 @@ public interface IDeviceService
     ProcessingCodeService ProcessingCodeService { get; set; }
     ReportTaskService ReportTaskService { get; set; }
     ISettingsService SettingsService { get; set; }
+    IVirtualBoxService VirtualBoxService { get; set; }
 
 
     void ChangeSetup(int numberSetup);

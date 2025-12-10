@@ -22,13 +22,18 @@
         <Grid ScrollViewer.VerticalScrollBarVisibility="Auto">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
             <UniformGrid Grid.Row="0" Columns="3">
-                <settingsView:CameraSettingsControl DataContext="{Binding CurrentSettings.BoxCamera}"/>
-                <settingsView:CameraSettingsControl DataContext="{Binding CurrentSettings.ProductCameraSlave}"/>
-                <settingsView:CameraSettingsControl DataContext="{Binding CurrentSettings.ProductCameraMaster}"/>
+                <settingsView:CameraSettingsControl DataContext="{Binding CurrentSettings.StatisticCamera}"/>
+                <settingsView:CameraSettingsControl DataContext="{Binding CurrentSettings.ProductCamera1}"/>
+                <settingsView:CameraSettingsControl DataContext="{Binding CurrentSettings.ProductCamera2}"/>
+            </UniformGrid>
+            <UniformGrid Grid.Row="1" Columns="2" Margin="0,10,0,0">
+                <settingsView:CameraSettingsControl DataContext="{Binding CurrentSettings.VerificationCamera1}"/>
+                <settingsView:CameraSettingsControl DataContext="{Binding CurrentSettings.VerificationCamera2}"/>
             </UniformGrid>
         </Grid>
     </Border></UserControl>

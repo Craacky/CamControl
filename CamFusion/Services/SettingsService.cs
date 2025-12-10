@@ -1,9 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Windows;
 using CC.Core.Devices.Impl;
 using CC.Core.Models.Base;
 using CC.Core.Services;
 using CC.Data.Entities.Settings;
+#nullable enable
 
 namespace CamFusion.Services;
 
@@ -24,6 +26,8 @@ public class SettingsService : ObservableObject, ISettingsService
 
     public LocalDb LocalDbService { get; set; }
 
+    public event Action SettingsChanged;
+
 
     public SettingsService(LocalDb localDbService)
     {
@@ -41,28 +45,46 @@ public class SettingsService : ObservableObject, ISettingsService
                 JobStoragePeriodInDays = 60
             },
 
-            ProductCameraMaster = new DeviceSettings()
+            StatisticCamera = new DeviceSettings()
             {
-                Name = "Камера считывания продукта (master)",
+                Name = "Камера статистики",
                 Ip = "172.25.40.5",
                 Port = 23,
                 IsUsed = true,
                 Path = ""
             },
 
-            ProductCameraSlave = new DeviceSettings()
+            ProductCamera1 = new DeviceSettings()
             {
-                Name = "Камера считывания продукта (slave)",
+                Name = "Камера считывания продукта (master)",
                 Ip = "172.25.40.4",
                 Port = 23,
                 IsUsed = true,
                 Path = ""
             },
 
-            BoxCamera = new DeviceSettings()
+            ProductCamera2 = new DeviceSettings()
             {
-                Name = "Камера считывания короба",
+                Name = "Камера считывания продукта (slave)",
                 Ip = "172.25.40.3",
+                Port = 23,
+                IsUsed = true,
+                Path = ""
+            },
+
+            VerificationCamera1 = new DeviceSettings()
+            {
+                Name = "Камера верификации продукта",
+                Ip = "172.25.40.6",
+                Port = 23,
+                IsUsed = true,
+                Path = ""
+            },
+
+            VerificationCamera2 = new DeviceSettings()
+            {
+                Name = "Камера верификации короба",
+                Ip = "172.25.40.7",
                 Port = 23,
                 IsUsed = true,
                 Path = ""
@@ -88,6 +110,15 @@ public class SettingsService : ObservableObject, ISettingsService
                 Path = ""
             },
 
+            TransportPrinter = new DeviceSettings()
+            {
+                Name = "Принтер транспортной этикетки",
+                Ip = "172.25.4.245",
+                Port = 9100,
+                IsUsed = true,
+                Path = ""
+            },
+
             ServerDb = new DbSettings()
             {
                 Name = "База данных (сервер)",
@@ -108,9 +139,9 @@ public class SettingsService : ObservableObject, ISettingsService
             .LastOrDefault();
         if (settings == null) return;
         if (settings.ServerDb == null ||
-            settings.ProductCameraSlave == null || settings.BoxCamera == null ||
-            settings.ProductCameraMaster == null ||
-            settings.BoxPrinter == null || settings.PalletPrinter == null) return;
+            settings.StatisticCamera == null || settings.ProductCamera1 == null || settings.ProductCamera2 == null ||
+            settings.VerificationCamera1 == null || settings.VerificationCamera2 == null ||
+            settings.BoxPrinter == null || settings.PalletPrinter == null || settings.TransportPrinter == null) return;
         Settings = settings;
         Settings.Id = 0;
     }
@@ -125,6 +156,7 @@ public class SettingsService : ObservableObject, ISettingsService
         Settings = settings;
         Settings.Id = 0;
         LocalDbService.SettingsDataService.Create(Settings);
+        SettingsChanged?.Invoke();
         MessageBox.Show("Настройки обновлены");
     }
 }

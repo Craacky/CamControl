@@ -8,7 +8,35 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="375d5425-0288-439f-8839-fc2080a9cefb" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.CamControl/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CamControl/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.CamControl/.idea/dataSources/c0be0ab4-33ec-4d13-9f83-568225cdaf41.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CamControl/.idea/dataSources/c0be0ab4-33ec-4d13-9f83-568225cdaf41.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.CamControl/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CamControl/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CC.Core/Devices/Impl/LocalDb.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CC.Core/Devices/Impl/LocalDb.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CC.Core/Devices/Impl/PrinterDevice.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CC.Core/Devices/Impl/PrinterDevice.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CC.Core/Models/CameraReadingResult.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CC.Core/Models/CameraReadingResult.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CC.Core/Models/Statistic.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CC.Core/Models/Statistic.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CC.Core/Services/IDeviceService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CC.Core/Services/IDeviceService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CC.Core/Services/ISettingsService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CC.Core/Services/ISettingsService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CC.Core/Services/Impl/DeviceServiceBase.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CC.Core/Services/Impl/DeviceServiceBase.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CC.Core/Services/Impl/NomenclatureService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CC.Core/Services/Impl/NomenclatureService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CC.Data/EFCore/DataBaseContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CC.Data/EFCore/DataBaseContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CC.Data/Entities/Settings/Settings.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CC.Data/Entities/Settings/Settings.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CC.Data/Entities/Tasks/ReportTask.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CC.Data/Entities/Tasks/ReportTask.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CC.UI/CC.UI.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/CC.UI/CC.UI.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CC.UI/Controls/SettingsView/CameraSettingsControl.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CC.UI/Controls/SettingsView/CameraSettingsControl.xaml.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CC.UI/Navigators/MainWindowNavigator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CC.UI/Navigators/MainWindowNavigator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CC.UI/ViewModels/MainWindow/LoginViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CC.UI/ViewModels/MainWindow/LoginViewModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CC.UI/ViewModels/MainWindow/MainViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CC.UI/ViewModels/MainWindow/MainViewModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CC.UI/ViewModels/Windows/CreateTaskWindowViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CC.UI/ViewModels/Windows/CreateTaskWindowViewModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CC.UI/Views/MainWindow/LoginView.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/CC.UI/Views/MainWindow/LoginView.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CC.UI/Views/MainWindow/LoginView.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CC.UI/Views/MainWindow/LoginView.xaml.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CC.UI/Views/MainWindow/MainView.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/CC.UI/Views/MainWindow/MainView.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CC.UI/Views/Settings/CameraSettingsView.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/CC.UI/Views/Settings/CameraSettingsView.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CC.UI/Views/Windows/CreateTaskWindow.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/CC.UI/Views/Windows/CreateTaskWindow.xaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CamFusion/App.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CamFusion/App.xaml.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CamFusion/Services/DeviceService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CamFusion/Services/DeviceService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CamFusion/Services/Devices/BoxPrinterService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CamFusion/Services/Devices/BoxPrinterService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CamFusion/Services/Devices/PalletPrinterService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CamFusion/Services/Devices/PalletPrinterService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CamFusion/Services/SettingsService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CamFusion/Services/SettingsService.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -62,6 +90,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
@@ -79,10 +108,8 @@
       <option name="PROGRAM_PARAMETERS" value="" />
       <option name="WORKING_DIRECTORY" value="" />
       <option name="PASS_PARENT_ENVS" value="1" />
-      <option name="USE_EXTERNAL_CONSOLE" value="0" />
       <option name="ENV_FILE_PATHS" value="" />
       <option name="REDIRECT_INPUT_PATH" value="" />
-      <option name="PTY_MODE" value="Auto" />
       <option name="MIXED_MODE_DEBUG" value="0" />
       <option name="USE_MONO" value="0" />
       <option name="RUNTIME_ARGUMENTS" value="" />
@@ -121,6 +148,8 @@
       <workItem from="1757325933187" duration="5799000" />
       <workItem from="1757400392183" duration="3147000" />
       <workItem from="1757405935099" duration="2881000" />
+      <workItem from="1765267338341" duration="16180000" />
+      <workItem from="1765348136317" duration="7059000" />
     </task>
     <task id="LOCAL-00001" summary="*wip">
       <option name="closed" value="true" />

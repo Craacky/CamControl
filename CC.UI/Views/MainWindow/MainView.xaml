@@ -25,6 +25,7 @@
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
                 <RowDefinition />
+                <RowDefinition Height="auto" />
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Row="0"
@@ -58,6 +59,7 @@
                     <mainView:CurrentPalletStatisticControl Grid.Column="3" VerticalAlignment="Top" />
                     <mainView:ButtonsPallet Grid.Column="4" VerticalAlignment="Top" />
                 </Grid>
+
             </Grid>
         </Grid>
     </Border>

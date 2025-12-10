@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -8,9 +8,9 @@ using CC.Data.Entities.Settings;
 
 namespace CamFusion.Services.Devices;
 
-public class BoxPrinterService : PrinterDevice
+public class TransportPrinterService : PrinterDevice
 {
-    public BoxPrinterService(
+    public TransportPrinterService(
         DeviceSettings deviceSettings,
         LineSettings lineSettings,
         LocalDb localDbService,
@@ -28,7 +28,7 @@ public class BoxPrinterService : PrinterDevice
             string messageToSend = patternMessage;
             messageToSend = messageToSend.Replace(
                 "<SERIAL>",
-                $"{ReportTaskService.Statistic.BoxCodes.Count}"
+                $"{ReportTaskService.Statistic.PalletCodes.Count}"
             );
 
             _ = _client.SendMessageAsync(messageToSend);
@@ -67,14 +67,14 @@ public class BoxPrinterService : PrinterDevice
             .AttributeDataService.GetAll(a => a.NomenclatureId == reportTask!.NomenclatureId)
             .ToList();
 
-        if (Device.IsConnected && !File.Exists("TSCBoxLabel.txt"))
+        if (Device.IsConnected && !File.Exists("TSCTransportLabel.txt"))
         {
-            MessageBox.Show("Отсутствует файл с шаблоном печати этикетки короба. Печать невозможна.");
+            MessageBox.Show("Отсутствует файл с шаблоном печати транспортной этикетки. Печать невозможна.");
             Stop();
         }
         else
         {
-            StreamReader reader = new("TSCBoxLabel.txt", Encoding.UTF8);
+            StreamReader reader = new("TSCTransportLabel.txt", Encoding.UTF8);
             patternTask = reader.ReadToEnd();
             patternTask = patternTask.Replace(
                 "<NAME>",
@@ -85,7 +85,7 @@ public class BoxPrinterService : PrinterDevice
                 attributes[0].Value.Replace("\"", "\\[\"]")
             );
             patternTask = patternTask.Replace("<STB>", attributes[7].Value);
-
+            
             patternTask = patternTask.Replace(
                 "<BATCH>",
                 $"{ReportTaskService.CurrentReportTask.LotNumber:0000}"
@@ -108,15 +108,15 @@ public class BoxPrinterService : PrinterDevice
                 "<ECODEDATE>",
                 ReportTaskService.CurrentReportTask.ExpiryDate.ToString("yyMMdd")
             );
-
+            
             patternTask = patternTask.Replace(
                 "<GTIN>",
                 ReportTaskService.CurrentReportTask.Nomenclature!.Gtin
             );
 
             patternTask = patternTask.Replace(
-                "<BOX_COUNT>",
-                ReportTaskService.Statistic.CountBoxes.ToString()
+                "<PALLET_COUNT>",
+                ReportTaskService.Statistic.PalletCodes.Count.ToString()
             );
 
             _ = _client.SendMessageAsync(patternTask);
@@ -125,17 +125,17 @@ public class BoxPrinterService : PrinterDevice
 
     private void LoadPatternMessage()
     {
-        if (Device.IsConnected && !File.Exists("TSCBoxPrint.txt"))
+        if (Device.IsConnected && !File.Exists("TSCTransportPrint.txt"))
         {
-            MessageBox.Show("Отсутствует файл с шаблоном печати этикетки короба. Печать невозможна.");
+            MessageBox.Show("Отсутствует файл с шаблоном печати транспортной этикетки. Печать невозможна.");
             Disconnect();
         }
         else
         {
-            StreamReader reader = new("TSCBoxPrint.txt", Encoding.UTF8);
+            StreamReader reader = new("TSCTransportPrint.txt", Encoding.UTF8);
             patternMessage = reader.ReadToEnd();
 
-            patternMessage = patternMessage.Replace("<SIZE>", "2");
+            patternMessage = patternMessage.Replace("<SIZE>", "3");
         }
     }
 }
