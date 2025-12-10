@@ -1,10 +1,12 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows;
 using CC.Core.Devices.Impl;
 using CC.Core.Services.Impl;
 using CC.Data.Entities.Settings;
+using CamFusion.Services;
 
 namespace CamFusion.Services.Devices;
 
@@ -24,14 +26,64 @@ public class PalletPrinterService : PrinterDevice
     {
         if (Device.IsUsed && _isRun)
         {
-            LoadPatternTask();
-            string messageToSend = patternMessage;
-            messageToSend = messageToSend.Replace(
-                "<SERIAL>",
-                $"{ReportTaskService.Statistic.PalletCodes.Count}"
+            // Prepare label data for the PrinterHandler
+            var labelData = new Dictionary<string, string>();
+
+            // Load label data from report task and attributes
+            var reportTask = LocalDbService.ReportTaskDataService.GetWithInclude(
+                r => r.Guid == ReportTaskService.CurrentReportTask.Guid,
+                rt => rt.Nomenclature
             );
 
-            _ = _client.SendMessageAsync(messageToSend);
+            if (reportTask == null)
+            {
+                System.Diagnostics.Debug.WriteLine("Error: Report task not found");
+                return; // Exit if report task is not found
+            }
+
+            var attributes = LocalDbService
+                .AttributeDataService.GetAll(a => a.NomenclatureId == reportTask.NomenclatureId)
+                .ToList();
+
+            if (attributes.Count < 8) // Need at least 8 attributes based on indexing
+            {
+                System.Diagnostics.Debug.WriteLine("Error: Not enough attributes for label data");
+                return; // Exit if there aren't enough attributes
+            }
+
+            // Add all the required label data
+            if (reportTask.Nomenclature == null)
+            {
+                System.Diagnostics.Debug.WriteLine("Error: Report task nomenclature not found");
+                return; // Exit if nomenclature is not found
+            }
+
+            labelData["NAME"] = reportTask.Nomenclature.Name.Replace("\"", "\\[\"\"]");
+            labelData["MARK"] = attributes[0].Value.Replace("\"", "\\[\"\"]");
+            labelData["STB"] = attributes[7].Value;
+            labelData["BATCH"] = $"{ReportTaskService.CurrentReportTask.LotNumber:0000}";
+            labelData["SDATE"] = ReportTaskService.CurrentReportTask.ManufactureDate.ToString("dd.MM.yy");
+            labelData["EDATE"] = ReportTaskService.CurrentReportTask.ExpiryDate.ToString("dd.MM.yy");
+            labelData["SCODEDATE"] = ReportTaskService.CurrentReportTask.ManufactureDate.ToString("yyMMdd");
+            labelData["ECODEDATE"] = ReportTaskService.CurrentReportTask.ExpiryDate.ToString("yyMMdd");
+            labelData["ITEMS"] = (ReportTaskService.Statistic.CountBoxInCurrentPallet * 12).ToString();
+            labelData["GTIN"] = reportTask.Nomenclature.Gtin;
+            labelData["SERIAL"] = $"{ReportTaskService.Statistic.PalletCodes.Count}";
+
+            // Use PrinterHandler to print the label
+            var printerHandlerService = new PrinterHandlerService();
+            var result = printerHandlerService.PrintLabel(
+                DeviceSettings.Ip, // Printer address
+                @"C:\Labels\PalletTemplate.btw", // Template path - will be configurable later
+                labelData,
+                1 // Number of copies
+            );
+
+            if (!result.Success)
+            {
+                // Log or handle the error appropriately
+                System.Diagnostics.Debug.WriteLine($"PrinterHandler Error: {result.Error}");
+            }
         }
     }
 

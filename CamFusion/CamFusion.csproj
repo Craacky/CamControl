@@ -16,6 +16,7 @@
       <ProjectReference Include="..\CC.Data\CC.Data.csproj" />
       <ProjectReference Include="..\CC.UI\CC.UI.csproj" />
       <ProjectReference Include="..\JsonParser\JsonParser.csproj" />
+      <ProjectReference Include="..\PrinterHandler\PrinterHandler.csproj" />
       <ProjectReference Include="..\SocketManager\SocketManager.csproj" />
     </ItemGroup>
 
